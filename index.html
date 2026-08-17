@@ -1,1208 +1,662 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PROMETALS</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box
-    }
-
-    body {
-      font-family: Segoe UI, Arial;
-      background: #0f1720;
-      color: #fff;
-      padding: 12px;
-      overflow: hidden;
-      height: 100vh
-    }
-
-    .header {
-      background: #172230;
-      padding: 14px 18px;
-      border-radius: 14px;
-      border-bottom: 3px solid #f07a1f;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center
-    }
-
-    .header h1 {
-      color: #f07a1f;
-      font-size: 22px
-    }
-
-    /* ABAS */
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px
-    }
-
-    .tab {
-      padding: 10px 24px;
-      border-radius: 10px 10px 0 0;
-      background: #172230;
-      color: #9eb0c1;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      border: 1px solid #263445;
-      border-bottom: none;
-      transition: .2s
-    }
-
-    .tab.active {
-      background: #1e3a5f;
-      color: #f07a1f;
-      border-color: #f07a1f
-    }
-
-    .tab-content {
-      display: none
-    }
-
-    .tab-content.active {
-      display: block
-    }
-
-    /* CARDS */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 8px;
-      margin-bottom: 12px
-    }
-
-    .card {
-      padding: 8px 10px;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: .2s;
-      min-height: 66px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center
-    }
-
-    .card:hover {
-      transform: translateY(-1px)
-    }
-
-    .card-title {
-      font-size: 11px;
-      line-height: 1.2;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis
-    }
-
-    .card p {
-      font-size: 24px;
-      margin-top: 4px
-    }
-
-    .red {
-      background: #5b1d1d
-    }
-
-    .orange {
-      background: #704010
-    }
-
-    .purple {
-      background: #4b2d73
-    }
-
-    .green {
-      background: #1d5a3d
-    }
-
-    .blue {
-      background: #20527c
-    }
-
-    .yellow {
-      background: #a17a10
-    }
-
-    /* FILTROS */
-    .filters {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 8px;
-      margin-bottom: 12px;
-      align-items: center
-    }
-
-    select,
-    input,
-    button {
-      padding: 9px;
-      border-radius: 10px;
-      border: 1px solid #334155;
-      background: #1e293b;
-      color: white;
-      font-size: 12px
-    }
-
-    button {
-      background: #f07a1f;
-      font-weight: 700;
-      cursor: pointer;
-      border: none
-    }
-
-    .panel {
-      background: #172230;
-      padding: 12px;
-      border-radius: 14px
-    }
-
-    .table-wrap {
-      height: calc(100vh - 280px);
-      overflow-y: auto;
-      overflow-x: auto;
-      border-radius: 10px
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: #243244;
-      padding: 9px;
-      font-size: 11px;
-      text-align: left
-    }
-
-    td {
-      padding: 9px;
-      border-bottom: 1px solid #263445;
-      font-size: 11px;
-      vertical-align: middle
-    }
-
-    tr:hover {
-      background: #1d2a3a
-    }
-
-    .multi-line {
-      line-height: 1.25;
-      white-space: normal;
-      word-break: break-word;
-      max-width: 180px
-    }
-
-    .desc {
-      line-height: 1.25;
-      white-space: normal;
-      word-break: break-word;
-      max-width: 220px
-    }
-
-    .priority {
-      background: #475569;
-      border: none;
-      color: white;
-      padding: 6px;
-      border-radius: 8px;
-      width: 100%;
-      min-width: 88px;
-      font-size: 11px
-    }
-
-    .date-input {
-      background: #0f1720;
-      border: 1px solid #334155;
-      color: white;
-      padding: 6px;
-      border-radius: 8px;
-      width: 100%
-    }
-
-    .processo-select {
-      background: #0f1720;
-      border: 1px solid #334155;
-      color: white;
-      padding: 6px;
-      border-radius: 8px;
-      width: 100%;
-      font-size: 11px;
-      min-width: 150px
-    }
-
-    .save-btn {
-      background: #16a34a;
-      padding: 7px 10px;
-      border: none;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 700
-    }
-
-    .select-btn {
-      background: #334155;
-      padding: 7px 10px;
-      border-radius: 8px;
-      font-size: 11px;
-      width: 100%
-    }
-
-    .selected {
-      background: #28435e !important
-    }
-
-    .bad {
-      color: #ef4444;
-      font-weight: 700
-    }
-
-    .ok {
-      color: #22c55e;
-      font-weight: 700
-    }
-
-    /* ── FUSÃO ── */
-    .fusao-wrap {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 14px;
-      height: calc(100vh - 200px)
-    }
-
-    .fusao-lista {
-      background: #172230;
-      border-radius: 14px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
-      max-height: calc(100vh - 320px)
-    }
-
-    .fusao-painel {
-      background: #172230;
-      border-radius: 14px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      height: calc(100vh - 180px)
-    }
-
-    .fusao-filtros {
-      display: flex;
-      gap: 10px;
-      flex-shrink: 0
-    }
-
-    .fusao-filtros select {
-      flex: 1
-    }
-
-    .fusao-table-wrap {
-      flex: 1;
-      overflow-y: auto;
-      border-radius: 8px
-    }
-
-    .fusao-table-wrap::-webkit-scrollbar {
-      width: 4px
-    }
-
-    .fusao-table-wrap::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 2px
-    }
-
-    table.ftable {
-      width: 100%;
-      border-collapse: collapse
-    }
-
-    table.ftable th {
-      position: sticky;
-      top: 0;
-      background: #1e3a5f;
-      padding: 8px;
-      font-size: 11px;
-      text-align: left;
-      color: #9eb0c1
-    }
-
-    table.ftable td {
-      padding: 8px;
-      border-bottom: 1px solid #1e2d3d;
-      font-size: 11px;
-      vertical-align: middle
-    }
-
-    table.ftable tr:hover td {
-      background: #1a2d40
-    }
-
-    .molde-input {
-      width: 72px;
-      padding: 5px 8px;
-      background: #0f1720;
-      border: 1px solid #334155;
-      color: #fff;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      text-align: center
-    }
-
-    .molde-input:focus {
-      outline: none;
-      border-color: #f07a1f
-    }
-
-    .corrida-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: #9eb0c1;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      border-bottom: 1px solid #263445;
-      padding-bottom: 8px
-    }
-
-    .corrida-item {
-      background: #0f1720;
-      border-radius: 8px;
-      padding: 8px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px
-    }
-
-    .corrida-item .op-num {
-      font-size: 13px;
-      font-weight: 800;
-      color: #f07a1f
-    }
-
-    .corrida-item .op-desc {
-      font-size: 10px;
-      color: #9eb0c1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis
-    }
-
-    .corrida-item .op-peso {
-      font-size: 11px;
-      color: #60a5fa;
-      font-weight: 700
-    }
-
-    .corrida-total {
-      background: #1e3a5f;
-      border-radius: 10px;
-      padding: 12px;
-      text-align: center
-    }
-
-    .corrida-total .peso-num {
-      font-size: 32px;
-      font-weight: 900;
-      line-height: 1
-    }
-
-    .corrida-total .peso-label {
-      font-size: 11px;
-      color: #9eb0c1;
-      margin-top: 4px
-    }
-
-    .corrida-total .peso-alerta {
-      font-size: 11px;
-      font-weight: 700;
-      margin-top: 6px;
-      color: #fbbf24
-    }
-
-    @keyframes spinIcon {
-      from {
-        transform: rotate(0deg)
-      }
-
-      to {
-        transform: rotate(360deg)
-      }
-    }
-
-    .spin-icon {
-      display: inline-block;
-      animation: spinIcon .8s linear infinite
-    }
-
-    .btn-excluir {
-      background: none;
-      color: #ef4444;
-      border: none;
-      width: 26px;
-      height: 26px;
-      cursor: pointer;
-      transition: .15s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0
-    }
-
-    .btn-excluir:hover {
-      color: #fca5a5
-    }
-
-    .btn-fechar {
-      background: #16a34a;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      width: 100%;
-      transition: .2s
-    }
-
-    .btn-fechar:hover {
-      background: #15803d
-    }
-
-    .btn-fechar:disabled {
-      background: #334155;
-      color: #9eb0c1;
-      cursor: not-allowed
-    }
-
-    .btn-imprimir-fusao {
-      background: #1e3a5f;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 10px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      transition: .2s;
-      margin-top: 4px
-    }
-
-    .btn-imprimir-fusao:hover {
-      background: #2a4a6f
-    }
-
-    .liga-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 700;
-      background: #1e3a5f;
-      color: #60a5fa
-    }
-
-    .sem-moldes {
-      color: #9eb0c1;
-      font-style: italic;
-      font-size: 11px;
-      text-align: center;
-      padding: 20px 0
-    }
-
-    @keyframes piscaCard {
-      0% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: .45
-      }
-
-      100% {
-        opacity: 1
-      }
-    }
-
-    .blink {
-      animation: piscaCard 1.2s infinite
-    }
-
-    .priority-normal {
-      background: #166534 !important;
-      color: white !important
-    }
-
-    .priority-prioridade {
-      background: #ca8a04 !important;
-      color: white !important
-    }
-
-    .priority-urgente {
-      background: #b91c1c !important;
-      color: white !important
-    }
-
-    button {
-      transition: .15s
-    }
-
-    button:active {
-      transform: scale(0.97);
-      filter: brightness(1.15)
-    }
-
-    .priority option {
-      background: #1e293b !important;
-      color: white !important
-    }
-
-    @media print {
-      body {
-        background: white;
-        color: black;
-        padding: 0
-      }
-
-      .header,
-      .filters,
-      .cards,
-      .save-btn,
-      .select-btn,
-      .tabs {
-        display: none
-      }
-
-      .panel {
-        background: white;
-        padding: 0
-      }
-
-      table {
-        width: 100%
-      }
-
-      th,
-      td {
-        border: 1px solid #ccc;
-        color: black
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROMETALS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Segoe UI,Arial;background:#0f1720;color:#fff;padding:12px;overflow:hidden;height:100vh}
+
+.header{background:#172230;padding:14px 18px;border-radius:14px;border-bottom:3px solid #f07a1f;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.header h1{color:#f07a1f;font-size:22px}
+
+/* ABAS */
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tab{padding:10px 24px;border-radius:10px 10px 0 0;background:#172230;color:#9eb0c1;font-weight:700;font-size:13px;cursor:pointer;border:1px solid #263445;border-bottom:none;transition:.2s}
+.tab.active{background:#1e3a5f;color:#f07a1f;border-color:#f07a1f}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:12px}
+.card{padding:8px 10px;border-radius:12px;font-weight:700;cursor:pointer;transition:.2s;min-height:66px;display:flex;flex-direction:column;justify-content:center}
+.card:hover{transform:translateY(-1px)}
+.card-title{font-size:11px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card p{font-size:24px;margin-top:4px}
+.red{background:#5b1d1d}.orange{background:#704010}.purple{background:#4b2d73}
+.green{background:#1d5a3d}.blue{background:#20527c}.yellow{background:#a17a10}
+
+/* FILTROS */
+.filters{display:flex;flex-wrap:nowrap;gap:8px;margin-bottom:12px;align-items:center}
+select,input,button{padding:9px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:white;font-size:12px}
+button{background:#f07a1f;font-weight:700;cursor:pointer;border:none}
+
+.panel{background:#172230;padding:12px;border-radius:14px}
+.table-wrap{height:calc(100vh - 280px);overflow-y:auto;overflow-x:auto;border-radius:10px}
+table{width:100%;border-collapse:collapse}
+th{position:sticky;top:0;z-index:20;background:#243244;padding:9px;font-size:11px;text-align:left}
+td{padding:9px;border-bottom:1px solid #263445;font-size:11px;vertical-align:middle}
+tr:hover{background:#1d2a3a}
+.multi-line{line-height:1.25;white-space:normal;word-break:break-word;max-width:180px}
+.desc{line-height:1.25;white-space:normal;word-break:break-word;max-width:220px}
+.priority{background:#475569;border:none;color:white;padding:6px;border-radius:8px;width:100%;min-width:88px;font-size:11px}
+.date-input{background:#0f1720;border:1px solid #334155;color:white;padding:6px;border-radius:8px;width:100%}
+.processo-select{background:#0f1720;border:1px solid #334155;color:white;padding:6px;border-radius:8px;width:100%;font-size:11px;min-width:150px}
+.save-btn{background:#16a34a;padding:7px 10px;border:none;border-radius:8px;font-size:11px;font-weight:700}
+.select-btn{background:#334155;padding:7px 10px;border-radius:8px;font-size:11px;width:100%}
+.selected{background:#28435e !important}
+.bad{color:#ef4444;font-weight:700}
+.ok{color:#22c55e;font-weight:700}
+
+/* ── FUSÃO ── */
+.fusao-wrap{display:grid;grid-template-columns:1fr 340px;gap:14px;height:calc(100vh - 200px)}
+.fusao-lista{background:#172230;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:calc(100vh - 320px)}
+.fusao-painel{background:#172230;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;height:calc(100vh - 180px)}
+
+.fusao-filtros{display:flex;gap:10px;flex-shrink:0}
+.fusao-filtros select{flex:1}
+
+.fusao-table-wrap{flex:1;overflow-y:auto;border-radius:8px}
+.fusao-table-wrap::-webkit-scrollbar{width:4px}
+.fusao-table-wrap::-webkit-scrollbar-thumb{background:#334155;border-radius:2px}
+
+table.ftable{width:100%;border-collapse:collapse}
+table.ftable th{position:sticky;top:0;background:#1e3a5f;padding:8px;font-size:11px;text-align:left;color:#9eb0c1}
+table.ftable td{padding:8px;border-bottom:1px solid #1e2d3d;font-size:11px;vertical-align:middle}
+table.ftable tr:hover td{background:#1a2d40}
+
+.molde-input{width:72px;padding:5px 8px;background:#0f1720;border:1px solid #334155;color:#fff;border-radius:8px;font-size:13px;font-weight:700;text-align:center}
+.molde-input:focus{outline:none;border-color:#f07a1f}
+
+.corrida-title{font-size:12px;font-weight:700;color:#9eb0c1;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #263445;padding-bottom:8px}
+
+.corrida-item{background:#0f1720;border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}
+.corrida-item .op-num{font-size:13px;font-weight:800;color:#f07a1f}
+.corrida-item .op-desc{font-size:10px;color:#9eb0c1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.corrida-item .op-peso{font-size:11px;color:#60a5fa;font-weight:700}
+
+.corrida-total{background:#1e3a5f;border-radius:10px;padding:12px;text-align:center}
+.corrida-total .peso-num{font-size:32px;font-weight:900;line-height:1}
+.corrida-total .peso-label{font-size:11px;color:#9eb0c1;margin-top:4px}
+.corrida-total .peso-alerta{font-size:11px;font-weight:700;margin-top:6px;color:#fbbf24}
+
+@keyframes spinIcon{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.spin-icon{display:inline-block;animation:spinIcon .8s linear infinite}
+.btn-excluir{background:none;color:#ef4444;border:none;width:26px;height:26px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.btn-excluir:hover{color:#fca5a5}
+.btn-fechar{background:#16a34a;color:#fff;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;width:100%;transition:.2s}
+.btn-fechar:hover{background:#15803d}
+.btn-fechar:disabled{background:#334155;color:#9eb0c1;cursor:not-allowed}
+.btn-imprimir-fusao{background:#1e3a5f;color:#fff;border:none;border-radius:10px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;width:100%;transition:.2s;margin-top:4px}
+.btn-imprimir-fusao:hover{background:#2a4a6f}
+
+.liga-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:#1e3a5f;color:#60a5fa}
+.sem-moldes{color:#9eb0c1;font-style:italic;font-size:11px;text-align:center;padding:20px 0}
+
+@keyframes piscaCard{0%{opacity:1}50%{opacity:.45}100%{opacity:1}}
+.blink{animation:piscaCard 1.2s infinite}
+.priority-normal{background:#166534 !important;color:white !important}
+.priority-prioridade{background:#ca8a04 !important;color:white !important}
+.priority-urgente{background:#b91c1c !important;color:white !important}
+button{transition:.15s}
+button:active{transform:scale(0.97);filter:brightness(1.15)}
+.priority option{background:#1e293b !important;color:white !important}
+
+@media print{
+  body{background:white;color:black;padding:0}
+  .header,.filters,.cards,.save-btn,.select-btn,.tabs{display:none}
+  .panel{background:white;padding:0}
+  table{width:100%}
+  th,td{border:1px solid #ccc;color:black}
+}
+</style>
 </head>
-
 <body>
 
-  <!-- LOGIN -->
-  <div id="loginScreen"
-    style="position:fixed;inset:0;background:#0f1720;display:flex;justify-content:center;align-items:center;z-index:9999">
-    <div
-      style="background:#172230;padding:50px;border-radius:16px;width:350px;text-align:center;border-top:4px solid #f07a1f">
-      <h2 style="color:#f07a1f;font-size:22px;font-weight:800;margin:0 0 6px">🔒 TRACK PROMETALS</h2>
-      <p style="color:#9eb0c1;font-size:14px;margin:0 0 16px">Digite sua senha</p>
-      <div style="position:relative;margin-bottom:12px">
-        <input type="password" id="senhaInput" placeholder="Digite a senha"
-          onkeydown="if(event.key==='Enter')validarSenha()"
-          style="width:100%;padding:12px;padding-right:44px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:white;box-sizing:border-box">
-        <button onclick="toggleSenha()" type="button"
-          style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:#9eb0c1;padding:0;line-height:1"
-          id="btnOlho">👁</button>
-      </div>
-      <button onclick="validarSenha()"
-        style="width:100%;padding:12px;background:#f07a1f;color:white;border:none;border-radius:10px;font-weight:700">ENTRAR</button>
-      <div id="erroSenha" style="color:#ef4444;margin-top:10px;font-size:12px"></div>
+<!-- LOGIN -->
+<div id="loginScreen" style="position:fixed;inset:0;background:#0f1720;display:flex;justify-content:center;align-items:center;z-index:9999">
+  <div style="background:#172230;padding:50px;border-radius:16px;width:350px;text-align:center;border-top:4px solid #f07a1f">
+    <h2 style="color:#f07a1f;font-size:22px;font-weight:800;margin:0 0 6px">🔒 TRACK PROMETALS</h2>
+    <p style="color:#9eb0c1;font-size:14px;margin:0 0 16px">Digite sua senha</p>
+    <div style="position:relative;margin-bottom:12px">
+      <input type="password" id="senhaInput" placeholder="Digite a senha"
+        onkeydown="if(event.key==='Enter')validarSenha()"
+        style="width:100%;padding:12px;padding-right:44px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:white;box-sizing:border-box">
+      <button onclick="toggleSenha()" type="button" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:#9eb0c1;padding:0;line-height:1" id="btnOlho">👁</button>
     </div>
+    <button onclick="validarSenha()" style="width:100%;padding:12px;background:#f07a1f;color:white;border:none;border-radius:10px;font-weight:700">ENTRAR</button>
+    <div id="erroSenha" style="color:#ef4444;margin-top:10px;font-size:12px"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <h1>PROMETALS • MANAGER CONTROL</h1>
+    <div>management operational center</div>
+  </div>
+  <div style="text-align:right">
+    <div id="relHora" style="font-size:26px;font-weight:800;color:#f07a1f;letter-spacing:2px;line-height:1">00:00:00</div>
+    <div id="relData" style="font-size:10px;color:#9eb0c1;letter-spacing:1px;margin-top:3px">—</div>
+  </div>
+</div>
+
+<!-- ABAS -->
+<div class="tabs">
+  <div class="tab active" onclick="mudarAba('gerencial')">📋 CONTROLE GERENCIAL</div>
+  <div class="tab" onclick="mudarAba('fusao')">🔥 PLANEJAMENTO DE FUSÃO</div>
+  <div class="tab" onclick="mudarAba('historico')">📜 HISTÓRICO DE CORRIDAS</div>
+</div>
+
+<!-- ═══ ABA GERENCIAL ═══ -->
+<div id="aba-gerencial" class="tab-content active">
+
+  <div class="cards">
+    <div class="card blue" onclick="setModo('TODOS')"><div class="card-title">CARTEIRA TOTAL</div><p id="c0">0</p></div>
+    <div class="card green" onclick="setModo('PRODUCAO')"><div class="card-title">EM PRODUÇÃO</div><p id="c1">0</p></div>
+    <div id="cardSemPrevisao" class="card yellow" onclick="setModo('SEM_PREVISAO')"><div class="card-title">SEM PREVISÃO</div><p id="c3">0</p></div>
+    <div id="cardPrevVencida" class="card red" onclick="setModo('PREVISAO_VENCIDA')"><div class="card-title">PREVISÕES VENCIDAS</div><p id="c6">0</p></div>
+    <div class="card orange" onclick="setModo('ATRASADAS')"><div class="card-title">OPS ATRASADAS</div><p id="c4">0</p></div>
+    <div class="card red" onclick="setModo('CRITICAS')"><div class="card-title">OPS ALTA PRIORIDADE</div><p id="c5">0</p></div>
+    <div class="card purple" onclick="setModo('ENGENHARIA')"><div class="card-title">ENGENHARIA</div><p id="c7">0</p></div>
+    <div class="card" style="background:#164e63" onclick="setModo('ESTOQUE')"><div class="card-title">ESTOQUE</div><p id="c8">0</p></div>
   </div>
 
-  <!-- HEADER -->
-  <div class="header">
-    <div>
-      <h1>PROMETALS • MANAGER CONTROL</h1>
-      <div>management operational center</div>
-    </div>
-    <div style="text-align:right">
-      <div id="relHora" style="font-size:26px;font-weight:800;color:#f07a1f;letter-spacing:2px;line-height:1">00:00:00
-      </div>
-      <div id="relData" style="font-size:10px;color:#9eb0c1;letter-spacing:1px;margin-top:3px">—</div>
-    </div>
+  <div class="filters">
+    <select id="fProcesso" onchange="renderizar()">
+      <option value="">Todos os Processos</option>
+    </select>
+    <select id="fPrioridade" onchange="renderizar()">
+      <option value="TODOS">Todas prioridades</option>
+      <option value="BAIXO">BAIXO</option>
+      <option value="MÉDIO">MÉDIO</option>
+      <option value="ALTO">ALTO</option>
+    </select>
+    <select id="fOrdem" onchange="renderizar()">
+      <option value="NONE">Sem ordenação</option>
+      <option value="PRAZO_ASC">Prazo ↑</option>
+      <option value="PRAZO_DESC">Prazo ↓</option>
+      <option value="PREVISAO_ASC">Previsão ↑</option>
+      <option value="PREVISAO_DESC">Previsão ↓</option>
+      <option value="PRIORIDADE">Prioridade</option>
+    </select>
+    <input type="date" id="fData" onchange="renderizar()">
+    <input type="text" id="busca" placeholder="Buscar OP / Pedido / Cliente / Processo" onkeyup="renderizar()" style="flex:1;min-width:180px">
+    <button onclick="salvarTodos()" style="background:#16a34a">SALVAR</button>
+    <button onclick="imprimirSelecionados()">IMPRIMIR</button>
+    <button onclick="imprimirPorProcesso()" style="background:#7c3aed">GARGALO</button>
   </div>
 
-  <!-- ABAS -->
-  <div class="tabs">
-    <div class="tab active" onclick="mudarAba('gerencial')">📋 CONTROLE GERENCIAL</div>
-    <div class="tab" onclick="mudarAba('fusao')">🔥 PLANEJAMENTO DE FUSÃO</div>
-    <div class="tab" onclick="mudarAba('historico')">📜 HISTÓRICO DE CORRIDAS</div>
+  <div class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>OP</th><th>PEDIDO</th><th>CLIENTE</th><th>CÓDIGO</th><th>DESCRIÇÃO</th>
+            <th>PROCESSO</th><th style="width:90px">PRAZO</th><th style="width:130px">PREVISÃO</th><th style="width:110px">PRIORIDADE</th><th style="width:50px">AÇÃO</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
   </div>
+</div>
 
-  <!-- ═══ ABA GERENCIAL ═══ -->
-  <div id="aba-gerencial" class="tab-content active">
+<!-- ═══ ABA FUSÃO ═══ -->
+<div id="aba-fusao" class="tab-content">
+  <div class="fusao-wrap">
 
-    <div class="cards">
-      <div class="card blue" onclick="setModo('TODOS')">
-        <div class="card-title">CARTEIRA TOTAL</div>
-        <p id="c0">0</p>
+    <!-- LISTA DE OPs -->
+    <div class="fusao-lista">
+      <div class="fusao-filtros">
+        <select id="fLiga" onchange="trocarLigaFusao()">
+          <option value="">Selecione a LIGA</option>
+        </select>
+        <input type="text" id="buscaFusao" placeholder="Buscar OP / Cliente / Código" onkeyup="renderFusao()" style="flex:2">
       </div>
-      <div class="card green" onclick="setModo('PRODUCAO')">
-        <div class="card-title">EM PRODUÇÃO</div>
-        <p id="c1">0</p>
-      </div>
-      <div id="cardSemPrevisao" class="card yellow" onclick="setModo('SEM_PREVISAO')">
-        <div class="card-title">SEM PREVISÃO</div>
-        <p id="c3">0</p>
-      </div>
-      <div id="cardPrevVencida" class="card red" onclick="setModo('PREVISAO_VENCIDA')">
-        <div class="card-title">PREVISÕES VENCIDAS</div>
-        <p id="c6">0</p>
-      </div>
-      <div class="card orange" onclick="setModo('ATRASADAS')">
-        <div class="card-title">OPS ATRASADAS</div>
-        <p id="c4">0</p>
-      </div>
-      <div class="card red" onclick="setModo('CRITICAS')">
-        <div class="card-title">OPS ALTA PRIORIDADE</div>
-        <p id="c5">0</p>
-      </div>
-      <div class="card purple" onclick="setModo('ENGENHARIA')">
-        <div class="card-title">ENGENHARIA</div>
-        <p id="c7">0</p>
-      </div>
-      <div class="card" style="background:#164e63" onclick="setModo('ESTOQUE')">
-        <div class="card-title">ESTOQUE</div>
-        <p id="c8">0</p>
-      </div>
-    </div>
-
-    <div class="filters">
-      <select id="fProcesso" onchange="renderizar()">
-        <option value="">Todos os Processos</option>
-      </select>
-      <select id="fPrioridade" onchange="renderizar()">
-        <option value="TODOS">Todas prioridades</option>
-        <option value="BAIXO">BAIXO</option>
-        <option value="MÉDIO">MÉDIO</option>
-        <option value="ALTO">ALTO</option>
-      </select>
-      <select id="fOrdem" onchange="renderizar()">
-        <option value="NONE">Sem ordenação</option>
-        <option value="PRAZO_ASC">Prazo ↑</option>
-        <option value="PRAZO_DESC">Prazo ↓</option>
-        <option value="PREVISAO_ASC">Previsão ↑</option>
-        <option value="PREVISAO_DESC">Previsão ↓</option>
-        <option value="PRIORIDADE">Prioridade</option>
-      </select>
-      <input type="date" id="fData" onchange="renderizar()">
-      <input type="text" id="busca" placeholder="Buscar OP / Pedido / Cliente / Processo" onkeyup="renderizar()"
-        style="flex:1;min-width:180px">
-      <button onclick="salvarTodos()" style="background:#16a34a">SALVAR</button>
-      <button onclick="imprimirSelecionados()">IMPRIMIR</button>
-      <button onclick="imprimirPorProcesso()" style="background:#7c3aed">GARGALO</button>
-    </div>
-
-    <div class="panel">
-      <div class="table-wrap">
-        <table>
+      <div class="fusao-table-wrap">
+        <table class="ftable">
           <thead>
             <tr>
-              <th>OP</th>
-              <th>PEDIDO</th>
-              <th>CLIENTE</th>
-              <th>CÓDIGO</th>
-              <th>DESCRIÇÃO</th>
-              <th>PROCESSO</th>
-              <th style="width:90px">PRAZO</th>
-              <th style="width:130px">PREVISÃO</th>
-              <th style="width:110px">PRIORIDADE</th>
-              <th style="width:50px">AÇÃO</th>
+              <th>OP</th><th>CLIENTE</th><th>CÓDIGO</th><th>DESCRIÇÃO</th>
+              <th>LIGA</th><th>PRAZO</th><th>MOLDES DISP.</th><th>PESO DISP. (kg)</th><th>MOLDES P/ CORRIDA</th>
             </tr>
           </thead>
-          <tbody id="tbody"></tbody>
+          <tbody id="tbFusao"></tbody>
         </table>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ ABA FUSÃO ═══ -->
-  <div id="aba-fusao" class="tab-content">
-    <div class="fusao-wrap">
-
-      <!-- LISTA DE OPs -->
-      <div class="fusao-lista">
-        <div class="fusao-filtros">
-          <select id="fLiga" onchange="trocarLigaFusao()">
-            <option value="">Selecione a LIGA</option>
-          </select>
-          <input type="text" id="buscaFusao" placeholder="Buscar OP / Cliente / Código" onkeyup="renderFusao()"
-            style="flex:2">
-        </div>
-        <div class="fusao-table-wrap">
-          <table class="ftable">
-            <thead>
-              <tr>
-                <th>OP</th>
-                <th>CLIENTE</th>
-                <th>CÓDIGO</th>
-                <th>DESCRIÇÃO</th>
-                <th>LIGA</th>
-                <th>PRAZO</th>
-                <th>MOLDES DISP.</th>
-                <th>PESO DISP. (kg)</th>
-                <th>MOLDES P/ CORRIDA</th>
-              </tr>
-            </thead>
-            <tbody id="tbFusao"></tbody>
-          </table>
-        </div>
+    <!-- PAINEL DA CORRIDA -->
+    <div class="fusao-painel">
+      <div class="corrida-title" style="display:flex;justify-content:space-between;align-items:center;text-transform:none">
+        <span>🔥 CORRIDA ATUAL</span>
+        <span style="display:flex;gap:6px">
+          <button class="btn-imprimir-fusao" onclick="imprimirRomaneio()" id="btnImprimirFusao" disabled title="Imprimir Romaneio"
+            style="width:30px;height:30px;padding:0;margin:0;font-size:14px">🖨</button>
+          <button class="btn-fechar" onclick="fecharCorrida()" id="btnFecharCorrida" disabled title="Fechar Corrida e Salvar Saldos"
+            style="width:30px;height:30px;padding:0;margin:0;font-size:14px">💾</button>
+        </span>
       </div>
 
-      <!-- PAINEL DA CORRIDA -->
-      <div class="fusao-painel">
-        <div class="corrida-title"
-          style="display:flex;justify-content:space-between;align-items:center;text-transform:none">
-          <span>🔥 CORRIDA ATUAL</span>
-          <span style="display:flex;gap:6px">
-            <button class="btn-imprimir-fusao" onclick="imprimirRomaneio()" id="btnImprimirFusao" disabled
-              title="Imprimir Romaneio" style="width:30px;height:30px;padding:0;margin:0;font-size:14px">🖨</button>
-            <button class="btn-fechar" onclick="fecharCorrida()" id="btnFecharCorrida" disabled
-              title="Fechar Corrida e Salvar Saldos"
-              style="width:30px;height:30px;padding:0;margin:0;font-size:14px">💾</button>
-          </span>
-        </div>
-
-        <!-- ID da Corrida — fixo -->
-        <div
-          style="background:#0f1720;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;flex-shrink:0">
-          <div style="color:#9eb0c1;font-size:10px;font-weight:700;letter-spacing:1px">IDENTIFICAÇÃO DA CORRIDA</div>
-          <div id="idCorridaPreview"
-            style="font-size:14px;font-weight:800;color:#f07a1f;text-align:center;padding:8px;background:#172230;border-radius:6px">
-            —</div>
-        </div>
-
-        <!-- Total peso — fixo -->
-        <div class="corrida-total" id="corridaTotal" style="flex-shrink:0">
-          <div class="peso-num" id="pesoTotal">0,0</div>
-          <div class="peso-label">kg na corrida</div>
-          <div class="peso-alerta" id="pesoAlerta" style="display:none">⚠ ACIMA DE 650 kg — VERIFICAR RECARGA</div>
-        </div>
-
-        <!-- Tudo abaixo do kg rola -->
-        <div style="flex:1;overflow-y:auto;min-height:0;display:flex;flex-direction:column;gap:10px">
-          <!-- Liga selecionada -->
-          <div style="background:#0f1720;border-radius:8px;padding:10px;font-size:12px">
-            <div style="color:#9eb0c1;font-size:10px;margin-bottom:4px">LIGA DA CORRIDA</div>
-            <div id="ligaCorrida" style="font-size:16px;font-weight:800;color:#f07a1f">—</div>
-          </div>
-
-          <!-- Resumo itens -->
-          <div style="display:flex;flex-direction:column;gap:6px" id="corridaItens">
-            <div class="sem-moldes">Nenhum molde adicionado</div>
-          </div>
-        </div>
+      <!-- ID da Corrida — fixo -->
+      <div style="background:#0f1720;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+        <div style="color:#9eb0c1;font-size:10px;font-weight:700;letter-spacing:1px">IDENTIFICAÇÃO DA CORRIDA</div>
+        <div id="idCorridaPreview" style="font-size:14px;font-weight:800;color:#f07a1f;text-align:center;padding:8px;background:#172230;border-radius:6px">—</div>
       </div>
 
-    </div>
-  </div>
+      <!-- Total peso — fixo -->
+      <div class="corrida-total" id="corridaTotal" style="flex-shrink:0">
+        <div class="peso-num" id="pesoTotal">0,0</div>
+        <div class="peso-label">kg na corrida</div>
+        <div class="peso-alerta" id="pesoAlerta" style="display:none">⚠ ACIMA DE 650 kg — VERIFICAR RECARGA</div>
+      </div>
 
-  <!-- ═══ ABA HISTÓRICO ═══ -->
-  <div id="aba-historico" class="tab-content">
-    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
-      <select id="fHistLiga" onchange="renderHistorico()" style="min-width:160px">
-        <option value="">Todas as ligas</option>
-      </select>
-      <input type="text" id="fHistBusca" placeholder="Buscar ID / OP / Pedido / Cliente / Código / Produto"
-        onkeyup="renderHistorico()" style="flex:1;min-width:260px">
-      <div style="display:flex;align-items:center;gap:6px">
-        <button onclick="navegarMesResumo(-1)" style="background:#334155;padding:6px 10px">◀</button>
-        <div id="resumoMesHistorico"
-          style="background:#172230;border:1px solid #263445;border-radius:8px;padding:8px 14px;font-size:12px;color:#9eb0c1;white-space:nowrap;width:280px;text-align:center;overflow:hidden;text-overflow:ellipsis">
-          Carregando resumo do mês...
+      <!-- Tudo abaixo do kg rola -->
+      <div style="flex:1;overflow-y:auto;min-height:0;display:flex;flex-direction:column;gap:10px">
+        <!-- Liga selecionada -->
+        <div style="background:#0f1720;border-radius:8px;padding:10px;font-size:12px">
+          <div style="color:#9eb0c1;font-size:10px;margin-bottom:4px">LIGA DA CORRIDA</div>
+          <div id="ligaCorrida" style="font-size:16px;font-weight:800;color:#f07a1f">—</div>
         </div>
-        <button onclick="navegarMesResumo(1)" style="background:#334155;padding:6px 10px">▶</button>
+
+        <!-- Resumo itens -->
+        <div style="display:flex;flex-direction:column;gap:6px" id="corridaItens">
+          <div class="sem-moldes">Nenhum molde adicionado</div>
+        </div>
       </div>
     </div>
-    <div style="background:#172230;border-radius:14px;padding:12px;height:calc(100vh - 240px);overflow-y:auto"
-      id="historicoContainer">
-      <div style="text-align:center;color:#9eb0c1;padding:40px">Carregando histórico...</div>
+
+  </div>
+</div>
+
+<!-- ═══ ABA HISTÓRICO ═══ -->
+<div id="aba-historico" class="tab-content">
+  <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+    <select id="fHistLiga" onchange="renderHistorico()" style="min-width:160px">
+      <option value="">Todas as ligas</option>
+    </select>
+    <input type="text" id="fHistBusca" placeholder="Buscar ID / OP / Pedido / Cliente / Código / Produto" onkeyup="renderHistorico()" style="flex:1;min-width:260px">
+    <div style="display:flex;align-items:center;gap:6px">
+      <button onclick="navegarMesResumo(-1)" style="background:#334155;padding:6px 10px">◀</button>
+      <div id="resumoMesHistorico" style="background:#172230;border:1px solid #263445;border-radius:8px;padding:8px 14px;font-size:12px;color:#9eb0c1;white-space:nowrap;width:280px;text-align:center;overflow:hidden;text-overflow:ellipsis">
+        Carregando resumo do mês...
+      </div>
+      <button onclick="navegarMesResumo(1)" style="background:#334155;padding:6px 10px">▶</button>
     </div>
   </div>
+  <div style="background:#172230;border-radius:14px;padding:12px;height:calc(100vh - 240px);overflow-y:auto" id="historicoContainer">
+    <div style="text-align:center;color:#9eb0c1;padding:40px">Carregando histórico...</div>
+  </div>
+</div>
 
-  <script>
-    'use strict';
+<script>
+'use strict';
 
-    const SENHA_TRACK = "Gerent2026@";
-    const WEBAPP = 'https://script.google.com/macros/s/AKfycbw2FCtMSWeeV2LsNeS5oNDTHnenaDj4U4s_q6Zhgfjpr0N1dEnm6Lc_75tXAHcRW1dN/exec';
-    const LIMITE_FORNO = 650;
+const SENHA_TRACK = "Gerent2026@";
+const WEBAPP = 'https://script.google.com/macros/s/AKfycbw2FCtMSWeeV2LsNeS5oNDTHnenaDj4U4s_q6Zhgfjpr0N1dEnm6Lc_75tXAHcRW1dN/exec';
+const LIMITE_FORNO = 650;
 
-    let base = [];
+let base = [];
 
-    // ── RELÓGIO ──
-    function tick() {
-      const n = new Date();
-      document.getElementById('relHora').innerText = pad(n.getHours()) + ':' + pad(n.getMinutes()) + ':' + pad(n.getSeconds());
-      document.getElementById('relData').innerText = n.toLocaleDateString('pt-BR', {weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'});
+// ── RELÓGIO ──
+function tick(){
+  const n = new Date();
+  document.getElementById('relHora').innerText = pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
+  document.getElementById('relData').innerText = n.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+}
+function pad(v){ return String(v).padStart(2,'0'); }
+setInterval(tick,1000); tick();
+let modoAtual = 'TODOS';
+let alteradas = new Set();
+let salvando = false;
+
+// Estado da corrida de fusão
+let corridaMoldes = {}; // { op: qtdMoldesSelecionados }
+
+// ── LOGIN ──
+function toggleSenha(){
+  const input = document.getElementById('senhaInput');
+  const btn   = document.getElementById('btnOlho');
+  if(input.type === 'password'){
+    input.type = 'text';
+    btn.innerText = '🙈';
+  } else {
+    input.type = 'password';
+    btn.innerText = '👁';
+  }
+}
+
+function validarSenha(){
+  let senha = document.getElementById('senhaInput').value;
+  if(senha === SENHA_TRACK){
+    document.getElementById('loginScreen').style.display = 'none';
+    carregar();
+  } else {
+    document.getElementById('erroSenha').innerText = "Senha inválida";
+  }
+}
+
+// ── ABAS ──
+function mudarAba(aba){
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['gerencial','fusao','historico'][i] === aba);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('aba-' + aba).classList.add('active');
+  if(aba === 'fusao') { renderFusao(); atualizarIdPreview(); }
+  if(aba === 'historico') carregarHistorico();
+}
+
+// ── ID DA CORRIDA ──
+function gerarIdCorrida(){
+  // Extrai o número de cada ID existente (ex: "FS-0071" -> 71) e pega o
+  // MAIOR valor já usado — nunca conta quantidade de IDs, porque corridas
+  // canceladas/excluídas criam "buracos" na sequência que fariam a
+  // contagem simples repetir um número já existente.
+  const numerosExistentes = (historicoData||[])
+    .map(x => {
+      const m = String(x.idCorrida||'').match(/FS-(\d+)/);
+      return m ? parseInt(m[1], 10) : 0;
+    });
+  const maiorNumero = numerosExistentes.length > 0 ? Math.max(...numerosExistentes) : 0;
+  const proximaOrdem = maiorNumero + 1;
+  return 'FS-' + String(proximaOrdem).padStart(4,'0');
+}
+
+function atualizarIdPreview(){
+  const el = document.getElementById('idCorridaPreview');
+  if(el) el.innerText = gerarIdCorrida() || '—';
+}
+
+// ── UTILS DATA ──
+function dataInput(v){
+  if(!v) return '';
+  if(v.includes('/')){ let p=v.split('/'); return p[2]+'-'+p[1]+'-'+p[0]; }
+  return v.split('T')[0];
+}
+
+function atraso(v){
+  if(!v) return 0;
+  let p=v.split('/');
+  let d=new Date(p[2],p[1]-1,p[0]);
+  let hoje=new Date(); hoje.setHours(0,0,0,0);
+  return Math.max(0, Math.floor((hoje-d)/86400000));
+}
+
+// ── CARREGAR ──
+async function carregar(){
+  let r = await fetch(WEBAPP+'?gerente=1&t='+Date.now());
+  base = await r.json();
+  popularProcessos();
+  renderizar();
+  popularLigas();
+  // Carregar histórico ANTES de liberar o painel — precisa estar completo
+  // para gerarIdCorrida() calcular o próximo número corretamente, sem
+  // gerar IDs duplicados/antigos.
+  if(historicoData.length === 0) await carregarHistorico();
+}
+
+// ── POPULAR LIGAS ──
+function popularLigas(){
+  const ligas = [...new Set(
+    base
+      .filter(x => Number(x.qtdmoldes||x.qtd_moldes||0) > 0)
+      .map(x=>x.liga||'')
+      .filter(Boolean)
+  )].sort();
+  const sel = document.getElementById('fLiga');
+  const ligaAtual = sel.value; // guardar liga selecionada antes de recriar
+  sel.innerHTML = '<option value="">Selecione a LIGA</option>';
+  ligas.forEach(l => sel.innerHTML += `<option value="${l}">${l}</option>`);
+  // restaurar liga selecionada
+  if(ligaAtual) sel.value = ligaAtual;
+  // re-renderizar fusão se a liga estava selecionada (garante consistência após auto-refresh)
+  if(ligaAtual && document.getElementById('aba-fusao').classList.contains('active')){
+    renderFusao();
+  }
+}
+
+// ══════════════════════════════════════
+// ABA GERENCIAL
+// ══════════════════════════════════════
+function setModo(v){ modoAtual=v; renderizar(); }
+
+function popularProcessos(){
+  const sel = document.getElementById('fProcesso');
+  if(!sel) return;
+  const atual = sel.value;
+  const processos = [...new Set(base.map(x=>(x.processo||'').replace(' - INICIADO','').replace(' - FINALIZADO','').trim()).filter(p=>p&&p!=='-'&&p!=='SEM MOVIMENTAÇÃO'))].sort();
+  sel.innerHTML = '<option value="">Todos os Processos</option>';
+  processos.forEach(p => sel.innerHTML += `<option value="${p}">${p}</option>`);
+  if(atual) sel.value = atual;
+}
+
+function renderizar(){
+  const fProcessoEl = document.getElementById('fProcesso');
+  const fProcessoVal = fProcessoEl ? fProcessoEl.value : '';
+  let busca = document.getElementById('busca').value.toUpperCase();
+  let prioridade = fPrioridade.value;
+  let ordem = fOrdem.value;
+  let data = document.getElementById('fData').value;
+
+  let lista = base.filter(x => {
+    let ok = true;
+    if(modoAtual==='ENGENHARIA') ok = ok && (!x.op || isNaN(parseFloat(x.op)));
+    if(modoAtual==='ESTOQUE') ok = ok && x.op && !isNaN(parseFloat(x.op)) && (!x.pedido || x.pedido==='-' || x.pedido==='');
+    if(modoAtual==='SEM_PREVISAO') ok = ok && x.op && !isNaN(parseFloat(x.op)) && !x.previsao;
+    if(modoAtual==='ATRASADAS') ok = ok && x.atrasada;
+    if(modoAtual==='CRITICAS') ok = ok && x.prioridade==='ALTO';
+    if(modoAtual==='PRODUCAO') ok = ok && x.situacao==='EM PRODUÇÃO';
+    if(modoAtual==='PREVISAO_VENCIDA'){
+      if(!x.previsao || !x.previsao.includes('/')) return false;
+      let p=x.previsao.split('/'); let dt=new Date(p[2],p[1]-1,p[0]);
+      let hoje=new Date(); hoje.setHours(0,0,0,0); ok = ok && dt < hoje;
     }
-    function pad(v) {return String(v).padStart(2, '0');}
-    setInterval(tick, 1000); tick();
-    let modoAtual = 'TODOS';
-    let alteradas = new Set();
-    let salvando = false;
+    if(fProcessoVal) ok = ok && (x.processo||'').replace(' - INICIADO','').replace(' - FINALIZADO','').trim() === fProcessoVal;
+    if(prioridade!=='TODOS') ok = ok && x.prioridade===prioridade;
+    if(data){ let br=data.split('-'); let brd=br[2]+'/'+br[1]+'/'+br[0]; ok = ok && x.prazo===brd; }
+    if(busca) ok = ok && (String(x.op)+String(x.pedido)+String(x.cliente)+String(x.codigo)+String(x.descricao)+String(x.processo||'')).toUpperCase().includes(busca);
+    return ok;
+  });
 
-    // Estado da corrida de fusão
-    let corridaMoldes = {}; // { op: qtdMoldesSelecionados }
+  lista.sort((a,b)=>{
+    const dt=v=>{if(!v||!v.includes('/'))return new Date(2099,11,31);let p=v.split('/');return new Date(p[2],p[1]-1,p[0]);};
+    if(ordem==='PRAZO_ASC') return dt(a.prazo)-dt(b.prazo);
+    if(ordem==='PRAZO_DESC') return dt(b.prazo)-dt(a.prazo);
+    if(ordem==='PREVISAO_ASC') return dt(a.previsao)-dt(b.previsao);
+    if(ordem==='PREVISAO_DESC') return dt(b.previsao)-dt(a.previsao);
+    if(ordem==='PRIORIDADE'){ const o={'ALTO':0,'MÉDIO':1,'BAIXO':2}; return (o[a.prioridade]??3)-(o[b.prioridade]??3); }
+    return 0;
+  });
 
-    // ── LOGIN ──
-    function toggleSenha() {
-      const input = document.getElementById('senhaInput');
-      const btn = document.getElementById('btnOlho');
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.innerText = '🙈';
-      } else {
-        input.type = 'password';
-        btn.innerText = '👁';
-      }
-    }
+  // Cards
+  document.getElementById('c0').innerText = base.length;
+  document.getElementById('c1').innerText = base.filter(x=>x.situacao==='EM PRODUÇÃO').length;
+  const semPrev = base.filter(x => x.op && !isNaN(parseFloat(x.op)) && !x.previsao).length;
+  document.getElementById('c3').innerText = semPrev;
+  document.getElementById('c4').innerText = base.filter(x=>x.atrasada).length;
+  document.getElementById('c5').innerText = base.filter(x=>x.prioridade==='ALTO').length;
 
-    function validarSenha() {
-      let senha = document.getElementById('senhaInput').value;
-      if (senha === SENHA_TRACK) {
-        document.getElementById('loginScreen').style.display = 'none';
-        carregar();
-      } else {
-        document.getElementById('erroSenha').innerText = "Senha inválida";
-      }
-    }
+  const prevVenc = base.filter(x=>{
+    if(!x.previsao||!x.previsao.includes('/')) return false;
+    let p=x.previsao.split('/'); let dt=new Date(p[2],p[1]-1,p[0]);
+    let hoje=new Date(); hoje.setHours(0,0,0,0); return dt<hoje;
+  }).length;
+  document.getElementById('c6').innerText = prevVenc;
 
-    // ── ABAS ──
-    function mudarAba(aba) {
-      document.querySelectorAll('.tab').forEach((t, i) => {
-        t.classList.toggle('active', ['gerencial', 'fusao', 'historico'][i] === aba);
-      });
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.getElementById('aba-' + aba).classList.add('active');
-      if (aba === 'fusao') {renderFusao(); atualizarIdPreview();}
-      if (aba === 'historico') carregarHistorico();
-    }
+  const engenharia = base.filter(x => !x.op || isNaN(parseFloat(x.op))).length;
+  document.getElementById('c7').innerText = engenharia;
 
-    // ── ID DA CORRIDA ──
-    function gerarIdCorrida() {
-      // Extrai o número de cada ID existente (ex: "FS-0071" -> 71) e pega o
-      // MAIOR valor já usado — nunca conta quantidade de IDs, porque corridas
-      // canceladas/excluídas criam "buracos" na sequência que fariam a
-      // contagem simples repetir um número já existente.
-      const numerosExistentes = (historicoData || [])
-        .map(x => {
-          const m = String(x.idCorrida || '').match(/FS-(\d+)/);
-          return m ? parseInt(m[1], 10) : 0;
-        });
-      const maiorNumero = numerosExistentes.length > 0 ? Math.max(...numerosExistentes) : 0;
-      const proximaOrdem = maiorNumero + 1;
-      return 'FS-' + String(proximaOrdem).padStart(4, '0');
-    }
+  const estoque = base.filter(x => x.op && !isNaN(parseFloat(x.op)) && (!x.pedido || x.pedido==='-' || x.pedido==='')).length;
+  document.getElementById('c8').innerText = estoque;
 
-    function atualizarIdPreview() {
-      const el = document.getElementById('idCorridaPreview');
-      if (el) el.innerText = gerarIdCorrida() || '—';
-    }
+  document.getElementById('cardSemPrevisao').classList.toggle('blink', semPrev>0);
+  document.getElementById('cardPrevVencida').classList.toggle('blink', prevVenc>0);
 
-    // ── UTILS DATA ──
-    function dataInput(v) {
-      if (!v) return '';
-      if (v.includes('/')) {let p = v.split('/'); return p[2] + '-' + p[1] + '-' + p[0];}
-      return v.split('T')[0];
-    }
-
-    function atraso(v) {
-      if (!v) return 0;
-      let p = v.split('/');
-      let d = new Date(p[2], p[1] - 1, p[0]);
-      let hoje = new Date(); hoje.setHours(0, 0, 0, 0);
-      return Math.max(0, Math.floor((hoje - d) / 86400000));
-    }
-
-    // ── CARREGAR ──
-    async function carregar() {
-      let r = await fetch(WEBAPP + '?gerente=1&t=' + Date.now());
-      base = await r.json();
-      popularProcessos();
-      renderizar();
-      popularLigas();
-      // Carregar histórico ANTES de liberar o painel — precisa estar completo
-      // para gerarIdCorrida() calcular o próximo número corretamente, sem
-      // gerar IDs duplicados/antigos.
-      if (historicoData.length === 0) await carregarHistorico();
-    }
-
-    // ── POPULAR LIGAS ──
-    function popularLigas() {
-      const ligas = [...new Set(
-        base
-          .filter(x => Number(x.qtdmoldes || x.qtd_moldes || 0) > 0)
-          .map(x => x.liga || '')
-          .filter(Boolean)
-      )].sort();
-      const sel = document.getElementById('fLiga');
-      const ligaAtual = sel.value; // guardar liga selecionada antes de recriar
-      sel.innerHTML = '<option value="">Selecione a LIGA</option>';
-      ligas.forEach(l => sel.innerHTML += `<option value="${l}">${l}</option>`);
-      // restaurar liga selecionada
-      if (ligaAtual) sel.value = ligaAtual;
-      // re-renderizar fusão se a liga estava selecionada (garante consistência após auto-refresh)
-      if (ligaAtual && document.getElementById('aba-fusao').classList.contains('active')) {
-        renderFusao();
-      }
-    }
-
-    // ══════════════════════════════════════
-    // ABA GERENCIAL
-    // ══════════════════════════════════════
-    function setModo(v) {modoAtual = v; renderizar();}
-
-    function popularProcessos() {
-      const sel = document.getElementById('fProcesso');
-      if (!sel) return;
-      const atual = sel.value;
-      const processos = [...new Set(base.map(x => (x.processo || '').replace(' - INICIADO', '').replace(' - FINALIZADO', '').trim()).filter(p => p && p !== '-' && p !== 'SEM MOVIMENTAÇÃO'))].sort();
-      sel.innerHTML = '<option value="">Todos os Processos</option>';
-      processos.forEach(p => sel.innerHTML += `<option value="${p}">${p}</option>`);
-      if (atual) sel.value = atual;
-    }
-
-    function renderizar() {
-      const fProcessoEl = document.getElementById('fProcesso');
-      const fProcessoVal = fProcessoEl ? fProcessoEl.value : '';
-      let busca = document.getElementById('busca').value.toUpperCase();
-      let prioridade = fPrioridade.value;
-      let ordem = fOrdem.value;
-      let data = document.getElementById('fData').value;
-
-      let lista = base.filter(x => {
-        let ok = true;
-        if (modoAtual === 'ENGENHARIA') ok = ok && (!x.op || isNaN(parseFloat(x.op)));
-        if (modoAtual === 'ESTOQUE') ok = ok && x.op && !isNaN(parseFloat(x.op)) && (!x.pedido || x.pedido === '-' || x.pedido === '');
-        if (modoAtual === 'SEM_PREVISAO') ok = ok && x.op && !isNaN(parseFloat(x.op)) && !x.previsao;
-        if (modoAtual === 'ATRASADAS') ok = ok && x.atrasada;
-        if (modoAtual === 'CRITICAS') ok = ok && x.prioridade === 'ALTO';
-        if (modoAtual === 'PRODUCAO') ok = ok && x.situacao === 'EM PRODUÇÃO';
-        if (modoAtual === 'PREVISAO_VENCIDA') {
-          if (!x.previsao || !x.previsao.includes('/')) return false;
-          let p = x.previsao.split('/'); let dt = new Date(p[2], p[1] - 1, p[0]);
-          let hoje = new Date(); hoje.setHours(0, 0, 0, 0); ok = ok && dt < hoje;
-        }
-        if (fProcessoVal) ok = ok && (x.processo || '').replace(' - INICIADO', '').replace(' - FINALIZADO', '').trim() === fProcessoVal;
-        if (prioridade !== 'TODOS') ok = ok && x.prioridade === prioridade;
-        if (data) {let br = data.split('-'); let brd = br[2] + '/' + br[1] + '/' + br[0]; ok = ok && x.prazo === brd;}
-        if (busca) ok = ok && (String(x.op) + String(x.pedido) + String(x.cliente) + String(x.codigo) + String(x.descricao) + String(x.processo || '')).toUpperCase().includes(busca);
-        return ok;
-      });
-
-      lista.sort((a, b) => {
-        const dt = v => {if (!v || !v.includes('/')) return new Date(2099, 11, 31); let p = v.split('/'); return new Date(p[2], p[1] - 1, p[0]);};
-        if (ordem === 'PRAZO_ASC') return dt(a.prazo) - dt(b.prazo);
-        if (ordem === 'PRAZO_DESC') return dt(b.prazo) - dt(a.prazo);
-        if (ordem === 'PREVISAO_ASC') return dt(a.previsao) - dt(b.previsao);
-        if (ordem === 'PREVISAO_DESC') return dt(b.previsao) - dt(a.previsao);
-        if (ordem === 'PRIORIDADE') {const o = {'ALTO': 0, 'MÉDIO': 1, 'BAIXO': 2}; return (o[a.prioridade] ?? 3) - (o[b.prioridade] ?? 3);}
-        return 0;
-      });
-
-      // Cards
-      document.getElementById('c0').innerText = base.length;
-      document.getElementById('c1').innerText = base.filter(x => x.situacao === 'EM PRODUÇÃO').length;
-      const semPrev = base.filter(x => x.op && !isNaN(parseFloat(x.op)) && !x.previsao).length;
-      document.getElementById('c3').innerText = semPrev;
-      document.getElementById('c4').innerText = base.filter(x => x.atrasada).length;
-      document.getElementById('c5').innerText = base.filter(x => x.prioridade === 'ALTO').length;
-
-      const prevVenc = base.filter(x => {
-        if (!x.previsao || !x.previsao.includes('/')) return false;
-        let p = x.previsao.split('/'); let dt = new Date(p[2], p[1] - 1, p[0]);
-        let hoje = new Date(); hoje.setHours(0, 0, 0, 0); return dt < hoje;
-      }).length;
-      document.getElementById('c6').innerText = prevVenc;
-
-      const engenharia = base.filter(x => !x.op || isNaN(parseFloat(x.op))).length;
-      document.getElementById('c7').innerText = engenharia;
-
-      const estoque = base.filter(x => x.op && !isNaN(parseFloat(x.op)) && (!x.pedido || x.pedido === '-' || x.pedido === '')).length;
-      document.getElementById('c8').innerText = estoque;
-
-      document.getElementById('cardSemPrevisao').classList.toggle('blink', semPrev > 0);
-      document.getElementById('cardPrevVencida').classList.toggle('blink', prevVenc > 0);
-
-      tbody.innerHTML = lista.map(x => {
-        const chave = x.op || x.pedido;
-        const processoLimpo = String(x.processo || '').replace(' - INICIADO', '').replace(' - FINALIZADO', '').trim();
-        const celulaProcesso = chave
-          ? `<select class="processo-select" id="proc_${chave}" onchange="alteradas.add('${chave}')">
-           ${TRACK_PROCESSOS.map(p => `<option ${p === processoLimpo ? 'selected' : ''}>${p}</option>`).join('')}
+  tbody.innerHTML = lista.map(x => {
+    const chave = x.op || x.pedido;
+    const processoLimpo = String(x.processo||'').replace(' - INICIADO','').replace(' - FINALIZADO','').trim();
+    const celulaProcesso = chave
+      ? `<select class="processo-select" id="proc_${chave}" onchange="alteradas.add('${chave}')">
+           ${TRACK_PROCESSOS.map(p => `<option ${p===processoLimpo?'selected':''}>${p}</option>`).join('')}
            ${!TRACK_PROCESSOS.includes(processoLimpo) && processoLimpo ? `<option selected>${processoLimpo}</option>` : ''}
          </select>`
-          : (processoLimpo || '-');
-        return `<tr id="row_${chave}">
-      <td>${x.op || '-'}</td>
-      <td>${x.pedido || '-'}</td>
-      <td class="multi-line">${x.cliente || '-'}</td>
-      <td>${x.codigo || '-'}</td>
-      <td class="desc">${x.descricao || '-'}</td>
+      : (processoLimpo || '-');
+    return `<tr id="row_${chave}">
+      <td>${x.op||'-'}</td>
+      <td>${x.pedido||'-'}</td>
+      <td class="multi-line">${x.cliente||'-'}</td>
+      <td>${x.codigo||'-'}</td>
+      <td class="desc">${x.descricao||'-'}</td>
       <td class="multi-line">${celulaProcesso}</td>
-      <td>${x.prazo || '-'}</td>
+      <td>${x.prazo||'-'}</td>
       <td><input type="date" class="date-input" id="prev_${chave}" value="${dataInput(x.previsao)}" onchange="alteradas.add('${chave}')"></td>
       <td style="min-width:100px"><select class="priority" id="prio_${chave}" onchange="alteradas.add('${chave}');atualizarCoresPrioridade()">
-        <option ${x.prioridade === 'BAIXO' ? 'selected' : ''}>BAIXO</option>
-        <option ${x.prioridade === 'MÉDIO' ? 'selected' : ''}>MÉDIO</option>
-        <option ${x.prioridade === 'ALTO' ? 'selected' : ''}>ALTO</option>
+        <option ${x.prioridade==='BAIXO'?'selected':''}>BAIXO</option>
+        <option ${x.prioridade==='MÉDIO'?'selected':''}>MÉDIO</option>
+        <option ${x.prioridade==='ALTO'?'selected':''}>ALTO</option>
       </select></td>
-      <td style="text-align:center">${x.op ? `<button class="btn-excluir" title="Excluir OP" onclick="excluirOP('${x.op}','${(x.cliente || '').replace(/'/g, "&apos;")}')"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9zm1 5h2v9h-2V8zm4 0h2v9h-2V8z"/></svg></button>` : '<span style="color:#9eb0c1;font-size:10px">—</span>'}</td>
+      <td style="text-align:center">${x.op ? `<button class="btn-excluir" title="Excluir OP" onclick="excluirOP('${x.op}','${(x.cliente||'').replace(/'/g,"&apos;")}')"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9zm1 5h2v9h-2V8zm4 0h2v9h-2V8z"/></svg></button>` : '<span style="color:#9eb0c1;font-size:10px">—</span>'}</td>
     </tr>`;
-      }).join('');
+  }).join('');
 
-      atualizarCoresPrioridade();
-    }
+  atualizarCoresPrioridade();
+}
 
-    // Exclusão de OP — reaproveita o mesmo endpoint que o painel Comercial já
-    // usa (tipo=finalizarComercial), que remove a linha inteira da
-    // BASE_OP_IMPORTADA. Nenhuma mudança de backend foi necessária.
-    async function excluirOP(op, cliente) {
-      if (!confirm(`Excluir a OP ${op} — ${cliente}?\n\nRemove a linha inteira da planilha.\nNão pode ser desfeito.`)) return;
-      try {
-        await fetch(WEBAPP + '?tipo=finalizarComercial', {
-          method: 'POST',
-          mode: 'no-cors',
-          body: JSON.stringify({op})
-        });
-      } catch (e) {
-        alert('⚠ Erro ao excluir. Verifique sua conexão e tente novamente.');
-        return;
-      }
-      setTimeout(carregar, 1200);
-    }
+// Exclusão de OP — reaproveita o mesmo endpoint que o painel Comercial já
+// usa (tipo=finalizarComercial), que remove a linha inteira da
+// BASE_OP_IMPORTADA. Nenhuma mudança de backend foi necessária.
+async function excluirOP(op, cliente){
+  if(!confirm(`Excluir a OP ${op} — ${cliente}?\n\nRemove a linha inteira da planilha.\nNão pode ser desfeito.`)) return;
+  try{
+    await fetch(WEBAPP+'?tipo=finalizarComercial', {
+      method:'POST',
+      mode:'no-cors',
+      body: JSON.stringify({ op })
+    });
+  }catch(e){
+    alert('⚠ Erro ao excluir. Verifique sua conexão e tente novamente.');
+    return;
+  }
+  setTimeout(carregar, 1200);
+}
 
-    // Listas de processos por departamento (mesmas validadas no painel PCP/Terminal)
-    // Lista mestre de processos — mesma validada no Track Terminal / PCP,
-    // usada no dropdown editável da coluna PROCESSO.
-    const TRACK_PROCESSOS = [
-      'VALIDAÇÃO TÉCNICA', 'ENGENHARIA', 'PLANEJAMENTO', 'FILA DE PRODUÇÃO', 'MODELAÇÃO',
-      'MOLDAGEM', 'PINTURA', 'FUSÃO', 'REBARBAÇÃO', 'TRATAMENTO TÉRMICO', 'JATEAMENTO',
-      'USINAGEM', 'BALANCEAMENTO EXTERNO', 'INSPEÇÃO FINAL', 'EXPEDIÇÃO'
-    ];
+// Listas de processos por departamento (mesmas validadas no painel PCP/Terminal)
+// Lista mestre de processos — mesma validada no Track Terminal / PCP,
+// usada no dropdown editável da coluna PROCESSO.
+const TRACK_PROCESSOS = [
+  'VALIDAÇÃO TÉCNICA','ENGENHARIA','PLANEJAMENTO','FILA DE PRODUÇÃO','MODELAÇÃO',
+  'MOLDAGEM','PINTURA','FUSÃO','REBARBAÇÃO','TRATAMENTO TÉRMICO','JATEAMENTO',
+  'USINAGEM','BALANCEAMENTO EXTERNO','INSPEÇÃO FINAL','EXPEDIÇÃO'
+];
 
-    async function salvarTodos() {
-      if (alteradas.size === 0) {alert('Nenhuma alteração encontrada'); return;}
-      salvando = true;
-      const btn = document.querySelector('[onclick="salvarTodos()"]');
-      const msgs = ['Salvando...', 'Aguarde...', 'Upload...'];
-      let idx = 0; btn.innerText = msgs[0];
-      const loop = setInterval(() => {idx = (idx + 1) % msgs.length; btn.innerText = msgs[idx];}, 2600);
+async function salvarTodos(){
+  if(alteradas.size===0){ alert('Nenhuma alteração encontrada'); return; }
+  salvando = true;
+  const btn = document.querySelector('[onclick="salvarTodos()"]');
+  const msgs = ['Salvando...','Aguarde...','Upload...'];
+  let idx=0; btn.innerText=msgs[0];
+  const loop = setInterval(()=>{ idx=(idx+1)%msgs.length; btn.innerText=msgs[idx]; }, 2600);
 
-      // Previsão/Prioridade: escrita segura, direto numa linha específica —
-      // pode disparar tudo em PARALELO sem risco de conflito.
-      const promessasGerente = [];
-      // Apontamento de processo: dispara atualizarStatusOP() no backend, que
-      // APAGA E REESCREVE a aba STATUS_ATUAL_OP inteira. Rodar isso em
-      // paralelo arriscaria uma escrita atropelar a outra — mantido em
-      // sequência, mas só entra nessa lista quem realmente mudou o processo
-      // (normalmente bem menos itens que o total alterado).
-      const apontamentosPendentes = [];
+  // Previsão/Prioridade: escrita segura, direto numa linha específica —
+  // pode disparar tudo em PARALELO sem risco de conflito.
+  const promessasGerente = [];
+  // Apontamento de processo: dispara atualizarStatusOP() no backend, que
+  // APAGA E REESCREVE a aba STATUS_ATUAL_OP inteira. Rodar isso em
+  // paralelo arriscaria uma escrita atropelar a outra — mantido em
+  // sequência, mas só entra nessa lista quem realmente mudou o processo
+  // (normalmente bem menos itens que o total alterado).
+  const apontamentosPendentes = [];
 
-      for (const chave of alteradas) {
-        const prev = document.getElementById('prev_' + chave);
-        const prio = document.getElementById('prio_' + chave);
-        const proc = document.getElementById('proc_' + chave);
-        if (!prev || !prio) continue;
-        const item = base.find(x => (x.op || x.pedido) === chave);
+  for(const chave of alteradas){
+    const prev = document.getElementById('prev_'+chave);
+    const prio = document.getElementById('prio_'+chave);
+    const proc = document.getElementById('proc_'+chave);
+    if(!prev||!prio) continue;
+    const item = base.find(x => (x.op||x.pedido) === chave);
 
-        promessasGerente.push(fetch(WEBAPP, {
-          method: 'POST', body: JSON.stringify({
-            op: item?.op || '',
-            pedido: item?.pedido || '',
-            previsao: prev.value,
-            prioridade: prio.value,
-            tipo: 'updateGerente'
-          })
-        }));
+    promessasGerente.push(fetch(WEBAPP, {
+      method:'POST', body:JSON.stringify({
+        op: item?.op || '',
+        pedido: item?.pedido || '',
+        previsao: prev.value,
+        prioridade: prio.value,
+        tipo:'updateGerente'
+      })
+    }));
 
-        const chaveApontamento = item?.op || item?.pedido;
-        if (proc && chaveApontamento) {
-          const processoOriginal = String(item.processo || '').replace(' - INICIADO', '').replace(' - FINALIZADO', '').trim();
-          if (proc.value !== processoOriginal) {
-            apontamentosPendentes.push({
-              operador: 'GERENTE',
-              op: chaveApontamento,
-              processo: proc.value,
-              qtd: item.qtdordem || '',
-              acao: 'INICIAR'
-            });
-          }
-        }
-      }
-
-      await Promise.all(promessasGerente);
-
-      // Todos os apontamentos de processo vão numa ÚNICA chamada em lote —
-      // o backend grava tudo de uma vez e só recalcula o status geral uma
-      // vez no final, em vez de uma vez por item (que era o motivo da demora).
-      if (apontamentosPendentes.length > 0) {
-        await fetch(WEBAPP, {
-          method: 'POST',
-          body: JSON.stringify({tipo: 'apontamentoLote', itens: apontamentosPendentes})
+    const chaveApontamento = item?.op || item?.pedido;
+    if(proc && chaveApontamento){
+      const processoOriginal = String(item.processo||'').replace(' - INICIADO','').replace(' - FINALIZADO','').trim();
+      if(proc.value !== processoOriginal){
+        apontamentosPendentes.push({
+          operador: 'GERENTE',
+          op: chaveApontamento,
+          processo: proc.value,
+          qtd: item.qtdordem || '',
+          acao: 'INICIAR'
         });
       }
-
-      alteradas.clear(); clearInterval(loop);
-      btn.innerText = 'SALVO ✓';
-      setTimeout(() => {btn.innerText = 'SALVAR';}, 1200);
-      salvando = false;
-      await new Promise(r => setTimeout(r, 2000));
-      if (alteradas.size === 0) carregar();
     }
+  }
 
-    function imprimirSelecionados() {
-      let rows = document.querySelectorAll('.selected');
-      if (rows.length === 0) rows = document.querySelectorAll('#tbody tr');
-      let alto = 0, medio = 0, baixo = 0, htmlRows = '';
+  await Promise.all(promessasGerente);
 
-      rows.forEach(r => {
-        let prio = r.querySelector('select').value;
-        if (prio === 'ALTO') alto++;
-        if (prio === 'MÉDIO') medio++;
-        if (prio === 'BAIXO') baixo++;
-        let cols = r.querySelectorAll('td');
-        let bg = prio === 'BAIXO' ? '#15803d' : prio === 'MÉDIO' ? '#ca8a04' : '#b91c1c';
-        let prevInput = r.querySelector('input[type="date"]');
-        let prevVal = prevInput ? prevInput.value : '';
-        let prevBR = prevVal ? (() => {let p = prevVal.split('-'); return p[2] + '/' + p[1] + '/' + p[0];})() : '-';
-        let diasVal = cols[9] ? cols[9].innerText : '-';
-        htmlRows += `<tr>
+  // Todos os apontamentos de processo vão numa ÚNICA chamada em lote —
+  // o backend grava tudo de uma vez e só recalcula o status geral uma
+  // vez no final, em vez de uma vez por item (que era o motivo da demora).
+  if(apontamentosPendentes.length > 0){
+    await fetch(WEBAPP, {
+      method:'POST',
+      body: JSON.stringify({ tipo:'apontamentoLote', itens: apontamentosPendentes })
+    });
+  }
+
+  alteradas.clear(); clearInterval(loop);
+  btn.innerText='SALVO ✓';
+  setTimeout(()=>{ btn.innerText='SALVAR'; }, 1200);
+  salvando = false;
+  await new Promise(r => setTimeout(r, 2000));
+  if(alteradas.size === 0) carregar();
+}
+
+function imprimirSelecionados(){
+  let rows = document.querySelectorAll('.selected');
+  if(rows.length===0) rows = document.querySelectorAll('#tbody tr');
+  let alto=0,medio=0,baixo=0,htmlRows='';
+
+  rows.forEach(r => {
+    const chave = r.id.replace('row_','');
+    // Lê processo e prioridade pelo ID único de cada campo — não pela
+    // posição da coluna nem por "primeiro select da linha" (isso quebrava
+    // desde que a coluna PROCESSO virou um select também).
+    const procEl = document.getElementById('proc_'+chave);
+    const prioEl = document.getElementById('prio_'+chave);
+    let prio = prioEl ? prioEl.value : '-';
+    if(prio==='ALTO') alto++;
+    if(prio==='MÉDIO') medio++;
+    if(prio==='BAIXO') baixo++;
+    let cols = r.querySelectorAll('td');
+    let bg = prio==='BAIXO'?'#15803d':prio==='MÉDIO'?'#ca8a04':'#b91c1c';
+    let prevInput = r.querySelector('input[type="date"]');
+    let prevVal = prevInput ? prevInput.value : '';
+    let prevBR = prevVal ? (()=>{ let p=prevVal.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; })() : '-';
+    let processoVal = procEl ? procEl.value : (cols[5] ? cols[5].innerText : '-');
+    htmlRows += `<tr>
       <td>${cols[0].innerText}</td><td>${cols[1].innerText}</td><td>${cols[2].innerText}</td>
       <td>${cols[3].innerText}</td><td>${cols[4].innerText}</td>
-      <td>${base.find(x => String(x.op) === cols[0].innerText)?.liga || '-'}</td>
-      <td>${cols[5].innerText.replace(' - INICIADO', '').replace(' - FINALIZADO', '')}</td>
+      <td>${base.find(x=>String(x.op)===cols[0].innerText)?.liga||'-'}</td>
+      <td>${processoVal}</td>
       <td>${cols[6].innerText}</td>
       <td>${prevBR}</td>
       <td style="font-weight:bold;color:white;text-align:center;background:${bg}">${prio}</td>
     </tr>`;
-      });
+  });
 
-      let w = window.open('');
-      w.document.write(`<html><head><title>PRIORIDADES PRODUÇÃO</title>
+  let w = window.open('');
+  w.document.write(`<html><head><title>PRIORIDADES PRODUÇÃO</title>
   <style>
     body{font-family:Arial;padding:20px;color:#111}
     h2{font-size:16px;margin-bottom:2px}
@@ -1218,131 +672,131 @@
   <th>LIGA</th><th>PROCESSO</th><th>PRAZO</th><th>PREVISÃO</th><th>PRIORIDADE</th></tr></thead>
   <tbody>${htmlRows}</tbody></table>
   <script>window.onload=()=>window.print();<\/script></body></html>`);
-      w.document.close(); w.print();
+  w.document.close(); w.print();
+}
+
+function imprimirPorProcesso(){
+  let rows = document.querySelectorAll('.selected');
+  if(rows.length===0) rows = document.querySelectorAll('#tbody tr');
+
+  const dados = [];
+  rows.forEach(r => {
+    const cols = r.querySelectorAll('td');
+    const chave = r.id.replace('row_','');
+    // Lê processo e prioridade pelo ID único de cada campo — mesma correção
+    // aplicada em imprimirSelecionados (não depende mais da posição da
+    // coluna nem de "primeiro select da linha").
+    const procEl = document.getElementById('proc_'+chave);
+    const prioEl = document.getElementById('prio_'+chave);
+    const prio = prioEl ? prioEl.value : '-';
+    const prevInput = r.querySelector('input[type="date"]');
+    const prevVal = prevInput ? prevInput.value : '';
+    const prevBR = prevVal ? (()=>{ let p=prevVal.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; })() : '-';
+    const op = cols[0].innerText;
+    let processo = (procEl ? procEl.value : (cols[5] ? cols[5].innerText : '')).replace(' - INICIADO','').replace(' - FINALIZADO','').trim();
+    if(!processo || processo==='-' || processo==='SEM MOVIMENTAÇÃO') processo = 'ENGENHARIA';
+    // Calcular dias desde ultima movimentação direto do base
+    const itemBase = base.find(x=>String(x.op)===op) ||
+                     base.find(x=> x.pedido == cols[1].innerText && x.codigo == cols[3].innerText);
+    let diasMov = '-';
+    if(itemBase && itemBase.ultima && itemBase.ultima !== '-'){
+      const ult = itemBase.ultima;
+      const m = String(ult).match(/(\d{2})\/(\d{2})\/(\d{4})/);
+      if(m){
+        const d = new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
+        const hoje = new Date(); hoje.setHours(0,0,0,0);
+        diasMov = Math.floor((hoje-d)/86400000);
+      }
     }
+    // Se não tem OP = Engenharia: bloco = ENGENHARIA, processo real fica na coluna
+    const ehEng = !op || op === '-' || op === 'ENG' || isNaN(parseFloat(op));
+    const grupo = ehEng ? 'ENGENHARIA' : processo;
+    const processoExibido = processo;
+    dados.push({
+      op, pedido: cols[1].innerText, cliente: cols[2].innerText,
+      codigo: cols[3].innerText, descricao: cols[4].innerText,
+      liga: itemBase?.liga||'-',
+      grupo, processo: processoExibido, prazo: cols[6].innerText, previsao: prevBR,
+      dias: diasMov, prioridade: prio
+    });
+  });
 
-    function imprimirPorProcesso() {
-      let rows = document.querySelectorAll('.selected');
-      if (rows.length === 0) rows = document.querySelectorAll('#tbody tr');
+  const grupos = {};
+  dados.forEach(x => { if(!grupos[x.grupo]) grupos[x.grupo]=[]; grupos[x.grupo].push(x); });
+  // Ordem fixa dos blocos conforme fluxo de produção
+  const ordemBlocos = [
+    'VALIDAÇÃO TÉCNICA','ENGENHARIA','PLANEJAMENTO','FILA DE PRODUÇÃO','MODELAÇÃO',
+    'MOLDAGEM','PINTURA','FUSÃO','REBARBAÇÃO','TRATAMENTO TÉRMICO','JATEAMENTO',
+    'USINAGEM','BALANCEAMENTO EXTERNO','INSPEÇÃO FINAL','EXPEDIÇÃO'
+  ];
 
-      const dados = [];
-      rows.forEach(r => {
-        const cols = r.querySelectorAll('td');
-        const prio = r.querySelector('select').value;
-        const prevInput = r.querySelector('input[type="date"]');
-        const prevVal = prevInput ? prevInput.value : '';
-        const prevBR = prevVal ? (() => {let p = prevVal.split('-'); return p[2] + '/' + p[1] + '/' + p[0];})() : '-';
-        const op = cols[0].innerText;
-        let processo = cols[5].innerText.replace(' - INICIADO', '').replace(' - FINALIZADO', '').trim();
-        if (!processo || processo === '-' || processo === 'SEM MOVIMENTAÇÃO') processo = 'ENGENHARIA';
-        // Calcular dias desde ultima movimentação direto do base
-        const itemBase = base.find(x => String(x.op) === op) ||
-          base.find(x => x.pedido == cols[1].innerText && x.codigo == cols[3].innerText);
-        let diasMov = '-';
-        if (itemBase && itemBase.ultima && itemBase.ultima !== '-') {
-          const ult = itemBase.ultima;
-          const m = String(ult).match(/(\d{2})\/(\d{2})\/(\d{4})/);
-          if (m) {
-            const d = new Date(parseInt(m[3]), parseInt(m[2]) - 1, parseInt(m[1]));
-            const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
-            diasMov = Math.floor((hoje - d) / 86400000);
-          }
-        }
-        // Se não tem OP = Engenharia: bloco = ENGENHARIA, processo real fica na coluna
-        const ehEng = !op || op === '-' || op === 'ENG' || isNaN(parseFloat(op));
-        const grupo = ehEng ? 'ENGENHARIA' : processo;
-        const processoExibido = processo;
-        dados.push({
-          op, pedido: cols[1].innerText, cliente: cols[2].innerText,
-          codigo: cols[3].innerText, descricao: cols[4].innerText,
-          liga: itemBase?.liga || '-',
-          grupo, processo: processoExibido, prazo: cols[6].innerText, previsao: prevBR,
-          dias: diasMov, prioridade: prio
-        });
-      });
+  // Ordenar grupos pela ordem fixa; blocos não listados vão para o final
+  const gruposOrdenados = Object.entries(grupos).sort((a,b) => {
+    const ia = ordemBlocos.indexOf(a[0]);
+    const ib = ordemBlocos.indexOf(b[0]);
+    if(ia === -1 && ib === -1) return 0;
+    if(ia === -1) return 1;
+    if(ib === -1) return -1;
+    return ia - ib;
+  });
+  const ordemPrio = {'ALTO':0,'MÉDIO':1,'BAIXO':2};
 
-      const grupos = {};
-      dados.forEach(x => {if (!grupos[x.grupo]) grupos[x.grupo] = []; grupos[x.grupo].push(x);});
-      // Ordem fixa dos blocos conforme fluxo de produção
-      const ordemBlocos = [
-        'VALIDAÇÃO TÉCNICA', 'ENGENHARIA', 'PLANEJAMENTO', 'FILA DE PRODUÇÃO', 'MODELAÇÃO',
-        'MOLDAGEM', 'PINTURA', 'FUSÃO', 'REBARBAÇÃO', 'TRATAMENTO TÉRMICO', 'JATEAMENTO',
-        'USINAGEM', 'BALANCEAMENTO EXTERNO', 'INSPEÇÃO FINAL', 'EXPEDIÇÃO'
-      ];
-
-      // Ordenar grupos pela ordem fixa; blocos não listados vão para o final
-      const gruposOrdenados = Object.entries(grupos).sort((a, b) => {
-        const ia = ordemBlocos.indexOf(a[0]);
-        const ib = ordemBlocos.indexOf(b[0]);
-        if (ia === -1 && ib === -1) return 0;
-        if (ia === -1) return 1;
-        if (ib === -1) return -1;
-        return ia - ib;
-      });
-      const ordemPrio = {'ALTO': 0, 'MÉDIO': 1, 'BAIXO': 2};
-
-      // colgroup e cabeçalho para blocos normais (sem coluna PROCESSO)
-      const colgroupNormal = `<colgroup>
+  // colgroup e cabeçalho para blocos normais (sem coluna PROCESSO)
+  const colgroupNormal = `<colgroup>
     <col style="width:55px"><col style="width:55px"><col style="width:130px">
     <col style="width:80px"><col style="width:auto"><col style="width:40px">
     <col style="width:65px"><col style="width:65px"><col style="width:35px"><col style="width:55px">
   </colgroup>`;
-      const thColsNormal = `<tr style="background:#d1d5db;color:#000">
+  const thColsNormal = `<tr style="background:#d1d5db;color:#000">
     <th>OP</th><th>PEDIDO</th><th>CLIENTE</th><th>CÓDIGO</th><th>DESCRIÇÃO</th>
     <th>LIGA</th><th>PRAZO</th><th>PREVISÃO</th><th>DIAS</th><th>PRIORIDADE</th>
   </tr>`;
 
-      // colgroup e cabeçalho para bloco ENGENHARIA (com coluna PROCESSO)
-      const colgroupEng = `<colgroup>
-    <col style="width:55px"><col style="width:55px"><col style="width:110px">
-    <col style="width:70px"><col style="width:auto"><col style="width:40px">
-    <col style="width:90px"><col style="width:60px"><col style="width:60px">
-    <col style="width:30px"><col style="width:50px">
-  </colgroup>`;
-      const thColsEng = `<tr style="background:#d1d5db;color:#000">
+  // colgroup e cabeçalho para bloco ENGENHARIA (com coluna PROCESSO)
+  const thColsEng = `<tr style="background:#d1d5db;color:#000">
     <th>OP</th><th>PEDIDO</th><th>CLIENTE</th><th>CÓDIGO</th><th>DESCRIÇÃO</th>
-    <th>LIGA</th><th>PROCESSO</th><th>PRAZO</th><th>PREVISÃO</th><th>DIAS</th><th>PRIORIDADE</th>
+    <th>LIGA</th><th>PRAZO</th><th>PREVISÃO</th><th>DIAS</th><th>PRIORIDADE</th>
   </tr>`;
 
-      let htmlBlocos = '';
-      gruposOrdenados.forEach(([bloco, ops], rank) => {
-        ops.sort((a, b) => (ordemPrio[a.prioridade] ?? 3) - (ordemPrio[b.prioridade] ?? 3));
-        const alto = ops.filter(x => x.prioridade === 'ALTO').length;
-        const medio = ops.filter(x => x.prioridade === 'MÉDIO').length;
-        const baixo = ops.filter(x => x.prioridade === 'BAIXO').length;
-        const isEng = bloco === 'ENGENHARIA';
+  let htmlBlocos = '';
+  gruposOrdenados.forEach(([bloco, ops], rank) => {
+    ops.sort((a,b) => (ordemPrio[a.prioridade]??3) - (ordemPrio[b.prioridade]??3));
+    const alto  = ops.filter(x=>x.prioridade==='ALTO').length;
+    const medio = ops.filter(x=>x.prioridade==='MÉDIO').length;
+    const baixo = ops.filter(x=>x.prioridade==='BAIXO').length;
+    const isEng = bloco === 'ENGENHARIA';
 
-        const linhas = ops.map(x => {
-          const bg = x.prioridade === 'ALTO' ? '#b91c1c' : x.prioridade === 'MÉDIO' ? '#ca8a04' : '#15803d';
-          const ligaVal = x.liga && x.liga !== '-' ? x.liga :
-            (base.find(b => b.pedido == x.pedido && b.codigo == x.codigo)?.liga || '-');
-          if (isEng) {
-            return `<tr>
-          <td>${x.op}</td><td>${x.pedido}</td><td>${x.cliente}</td>
-          <td>${x.codigo}</td><td>${x.descricao}</td><td>${ligaVal}</td>
-          <td>${x.processo}</td><td>${x.prazo}</td><td>${x.previsao}</td>
-          <td style="text-align:center">${x.dias}</td>
-          <td style="font-weight:bold;color:white;text-align:center;background:${bg}">${x.prioridade}</td>
-        </tr>`;
-          } else {
-            return `<tr>
+    const linhas = ops.map(x => {
+      const bg = x.prioridade==='ALTO'?'#b91c1c':x.prioridade==='MÉDIO'?'#ca8a04':'#15803d';
+      const ligaVal = x.liga && x.liga !== '-' ? x.liga :
+        (base.find(b => b.pedido == x.pedido && b.codigo == x.codigo)?.liga || '-');
+      if(isEng){
+        return `<tr>
           <td>${x.op}</td><td>${x.pedido}</td><td>${x.cliente}</td>
           <td>${x.codigo}</td><td>${x.descricao}</td><td>${ligaVal}</td>
           <td>${x.prazo}</td><td>${x.previsao}</td>
           <td style="text-align:center">${x.dias}</td>
           <td style="font-weight:bold;color:white;text-align:center;background:${bg}">${x.prioridade}</td>
         </tr>`;
-          }
-        }).join('');
+      } else {
+        return `<tr>
+          <td>${x.op}</td><td>${x.pedido}</td><td>${x.cliente}</td>
+          <td>${x.codigo}</td><td>${x.descricao}</td><td>${ligaVal}</td>
+          <td>${x.prazo}</td><td>${x.previsao}</td>
+          <td style="text-align:center">${x.dias}</td>
+          <td style="font-weight:bold;color:white;text-align:center;background:${bg}">${x.prioridade}</td>
+        </tr>`;
+      }
+    }).join('');
 
-        const colspan = isEng ? 11 : 10;
-        htmlBlocos += `
+    const colspan = 10;
+    htmlBlocos += `
       <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:10px;table-layout:fixed">
-        ${isEng ? colgroupEng : colgroupNormal}
+        ${colgroupNormal}
         <thead>
           <tr style="background:#9ca3af;color:#000">
             <td colspan="${colspan}" style="padding:7px 10px;font-weight:800;font-size:12px">
-              ${rank + 1}° ${bloco.toUpperCase()}
+              ${rank+1}° ${bloco.toUpperCase()}
               &nbsp;&nbsp;|&nbsp;&nbsp; TOTAL: ${ops.length} OPs
             </td>
           </tr>
@@ -1350,10 +804,10 @@
         </thead>
         <tbody>${linhas}</tbody>
       </table>`;
-      });
+  });
 
-      const w = window.open('');
-      w.document.write(`<html><head><title>GARGALO DE PRODUÇÃO</title>
+  const w = window.open('');
+  w.document.write(`<html><head><title>GARGALO DE PRODUÇÃO</title>
   <style>
     body{font-family:Arial;padding:20px;color:#111}
     h2{font-size:16px;margin-bottom:2px}
@@ -1366,60 +820,60 @@
   ${htmlBlocos}
   <script>window.onload=()=>window.print();<\/script>
   </body></html>`);
-      w.document.close();
-    }
+  w.document.close();
+}
 
-    function atualizarCoresPrioridade() {
-      document.querySelectorAll('.priority').forEach(el => {
-        el.classList.remove('priority-normal', 'priority-prioridade', 'priority-urgente');
-        if (el.value === 'BAIXO') el.classList.add('priority-normal');
-        if (el.value === 'MÉDIO') el.classList.add('priority-prioridade');
-        if (el.value === 'ALTO') el.classList.add('priority-urgente');
-      });
-    }
+function atualizarCoresPrioridade(){
+  document.querySelectorAll('.priority').forEach(el => {
+    el.classList.remove('priority-normal','priority-prioridade','priority-urgente');
+    if(el.value==='BAIXO') el.classList.add('priority-normal');
+    if(el.value==='MÉDIO') el.classList.add('priority-prioridade');
+    if(el.value==='ALTO')  el.classList.add('priority-urgente');
+  });
+}
 
-    // ══════════════════════════════════════
-    // ABA FUSÃO
-    // ══════════════════════════════════════
-    function renderFusao() {
-      const liga = document.getElementById('fLiga').value;
-      const busca = document.getElementById('buscaFusao').value.toUpperCase();
+// ══════════════════════════════════════
+// ABA FUSÃO
+// ══════════════════════════════════════
+function renderFusao(){
+  const liga = document.getElementById('fLiga').value;
+  const busca = document.getElementById('buscaFusao').value.toUpperCase();
 
-      // Filtrar OPs com moldes disponíveis (qtdmoldes > 0 e tem liga)
-      let lista = base.filter(x => {
-        const qtdM = Number(x.qtdmoldes || x.qtd_moldes || 0);
-        const pesoM = Number(x.pesomoldes || x.peso_total_moldes || 0);
-        if (qtdM <= 0 || pesoM <= 0) return false;
-        if (liga && x.liga !== liga) return false;
-        if (busca && !(String(x.op) + String(x.cliente) + String(x.codigo)).toUpperCase().includes(busca)) return false;
-        return true;
-      });
+  // Filtrar OPs com moldes disponíveis (qtdmoldes > 0 e tem liga)
+  let lista = base.filter(x => {
+    const qtdM = Number(x.qtdmoldes||x.qtd_moldes||0);
+    const pesoM = Number(x.pesomoldes||x.peso_total_moldes||0);
+    if(qtdM <= 0 || pesoM <= 0) return false;
+    if(liga && x.liga !== liga) return false;
+    if(busca && !(String(x.op)+String(x.cliente)+String(x.codigo)).toUpperCase().includes(busca)) return false;
+    return true;
+  });
 
-      if (!liga) {
-        document.getElementById('tbFusao').innerHTML =
-          '<tr><td colspan="9" style="text-align:center;color:#9eb0c1;padding:20px">Selecione uma LIGA para ver as OPs disponíveis</td></tr>';
-        return;
-      }
+  if(!liga){
+    document.getElementById('tbFusao').innerHTML =
+      '<tr><td colspan="9" style="text-align:center;color:#9eb0c1;padding:20px">Selecione uma LIGA para ver as OPs disponíveis</td></tr>';
+    return;
+  }
 
-      if (lista.length === 0) {
-        document.getElementById('tbFusao').innerHTML =
-          '<tr><td colspan="9" style="text-align:center;color:#9eb0c1;padding:20px">Nenhuma OP com moldes disponíveis para esta liga</td></tr>';
-        return;
-      }
+  if(lista.length === 0){
+    document.getElementById('tbFusao').innerHTML =
+      '<tr><td colspan="9" style="text-align:center;color:#9eb0c1;padding:20px">Nenhuma OP com moldes disponíveis para esta liga</td></tr>';
+    return;
+  }
 
-      document.getElementById('tbFusao').innerHTML = lista.map(x => {
-        const qtdDisp = Number(x.qtdmoldes || x.qtd_moldes || 0);
-        const pesoDisp = Number(x.pesomoldes || x.peso_total_moldes || 0);
-        const pesoPorMolde = qtdDisp > 0 ? pesoDisp / qtdDisp : 0;
-        const selecionado = corridaMoldes[x.op] || 0;
+  document.getElementById('tbFusao').innerHTML = lista.map(x => {
+    const qtdDisp = Number(x.qtdmoldes||x.qtd_moldes||0);
+    const pesoDisp = Number(x.pesomoldes||x.peso_total_moldes||0);
+    const pesoPorMolde = qtdDisp > 0 ? pesoDisp / qtdDisp : 0;
+    const selecionado = corridaMoldes[x.op] || 0;
 
-        return `<tr>
+    return `<tr>
       <td style="font-weight:800;color:#f07a1f">${x.op}</td>
-      <td style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.cliente || '-'}</td>
-      <td>${x.codigo || '-'}</td>
-      <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.descricao || '-'}</td>
-      <td><span class="liga-badge">${x.liga || '-'}</span></td>
-      <td>${x.prazo || '-'}</td>
+      <td style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.cliente||'-'}</td>
+      <td>${x.codigo||'-'}</td>
+      <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.descricao||'-'}</td>
+      <td><span class="liga-badge">${x.liga||'-'}</span></td>
+      <td>${x.prazo||'-'}</td>
       <td style="font-weight:700;color:#60a5fa">${qtdDisp}</td>
       <td style="font-weight:700;color:#34d399">${pesoDisp.toFixed(1)} kg</td>
       <td>
@@ -1429,251 +883,251 @@
           oninput="this.value=Math.max(0,parseInt(this.value)||0)">
       </td>
     </tr>`;
-      }).join('');
+  }).join('');
+}
+
+function trocarLigaFusao(){
+  if(Object.keys(corridaMoldes).length > 0) corridaMoldes = {};
+  window._ligaAnterior = document.getElementById('fLiga').value;
+  renderFusao();
+}
+
+function atualizarCorrida(op, qtdMax, pesoPorMolde, valor){
+  let qtd = Math.max(0, parseInt(valor)||0);
+  // Trava a quantidade no máximo disponível para aquela OP — nunca deixa
+  // registrar mais moldes do que o liberado.
+  if(qtd > qtdMax){
+    qtd = qtdMax;
+    const inputEl = document.getElementById('mol_'+op);
+    if(inputEl) inputEl.value = qtdMax;
+  }
+  const x = base.find(b => String(b.op) === String(op));
+  if(!x) return;
+
+  if(qtd > 0){
+    corridaMoldes[op] = qtd;
+  } else {
+    delete corridaMoldes[op];
+  }
+
+  recalcularCorrida();
+}
+
+// ✅ 2) Limpar corrida
+function limparCorrida(){
+  if(Object.keys(corridaMoldes).length === 0) return;
+  if(!confirm('Limpar a corrida atual? Os dados não serão salvos.')) return;
+  corridaMoldes = {};
+  // Zerar inputs
+  document.querySelectorAll('.molde-input').forEach(el => el.value = 0);
+  recalcularCorrida();
+}
+
+function recalcularCorrida(){
+  const liga = document.getElementById('fLiga').value;
+  let pesoTotal = 0;
+  let itens = [];
+
+  for(const [op, qtd] of Object.entries(corridaMoldes)){
+    const x = base.find(b => String(b.op) === String(op));
+    if(!x) continue;
+    // Trava de segurança: nunca soma item de OP que não pertença à liga
+    // atualmente selecionada — evita misturar ligas na mesma corrida caso
+    // algum item fique preso no estado por engano.
+    if(liga && x.liga !== liga){
+      delete corridaMoldes[op];
+      continue;
     }
+    const qtdDisp = Number(x.qtdmoldes||x.qtd_moldes||0);
+    const pesoDisp = Number(x.pesomoldes||x.peso_total_moldes||0);
+    const pesoPorMolde = qtdDisp > 0 ? pesoDisp / qtdDisp : 0;
+    const peso = qtd * pesoPorMolde;
+    pesoTotal += peso;
+    itens.push({ op, qtd, peso, cliente: x.cliente, descricao: x.descricao });
+  }
 
-    function trocarLigaFusao() {
-      if (Object.keys(corridaMoldes).length > 0) corridaMoldes = {};
-      window._ligaAnterior = document.getElementById('fLiga').value;
-      renderFusao();
-    }
+  // Atualizar total
+  document.getElementById('pesoTotal').innerText = pesoTotal.toFixed(1).replace('.',',');
 
-    function atualizarCorrida(op, qtdMax, pesoPorMolde, valor) {
-      let qtd = Math.max(0, parseInt(valor) || 0);
-      // Trava a quantidade no máximo disponível para aquela OP — nunca deixa
-      // registrar mais moldes do que o liberado.
-      if (qtd > qtdMax) {
-        qtd = qtdMax;
-        const inputEl = document.getElementById('mol_' + op);
-        if (inputEl) inputEl.value = qtdMax;
-      }
-      const x = base.find(b => String(b.op) === String(op));
-      if (!x) return;
+  // Alerta 650 kg
+  const alerta = document.getElementById('pesoAlerta');
+  const corridaEl = document.getElementById('corridaTotal');
+  if(pesoTotal > LIMITE_FORNO){
+    alerta.style.display = 'block';
+    corridaEl.style.background = '#5b1d1d';
+    document.getElementById('pesoTotal').style.color = '#ef4444';
+  } else {
+    alerta.style.display = 'none';
+    corridaEl.style.background = '#1e3a5f';
+    document.getElementById('pesoTotal').style.color = '#fff';
+  }
 
-      if (qtd > 0) {
-        corridaMoldes[op] = qtd;
-      } else {
-        delete corridaMoldes[op];
-      }
+  // Liga
+  document.getElementById('ligaCorrida').innerText = liga || '—';
 
-      recalcularCorrida();
-    }
-
-    // ✅ 2) Limpar corrida
-    function limparCorrida() {
-      if (Object.keys(corridaMoldes).length === 0) return;
-      if (!confirm('Limpar a corrida atual? Os dados não serão salvos.')) return;
-      corridaMoldes = {};
-      // Zerar inputs
-      document.querySelectorAll('.molde-input').forEach(el => el.value = 0);
-      recalcularCorrida();
-    }
-
-    function recalcularCorrida() {
-      const liga = document.getElementById('fLiga').value;
-      let pesoTotal = 0;
-      let itens = [];
-
-      for (const [op, qtd] of Object.entries(corridaMoldes)) {
-        const x = base.find(b => String(b.op) === String(op));
-        if (!x) continue;
-        // Trava de segurança: nunca soma item de OP que não pertença à liga
-        // atualmente selecionada — evita misturar ligas na mesma corrida caso
-        // algum item fique preso no estado por engano.
-        if (liga && x.liga !== liga) {
-          delete corridaMoldes[op];
-          continue;
-        }
-        const qtdDisp = Number(x.qtdmoldes || x.qtd_moldes || 0);
-        const pesoDisp = Number(x.pesomoldes || x.peso_total_moldes || 0);
-        const pesoPorMolde = qtdDisp > 0 ? pesoDisp / qtdDisp : 0;
-        const peso = qtd * pesoPorMolde;
-        pesoTotal += peso;
-        itens.push({op, qtd, peso, cliente: x.cliente, descricao: x.descricao});
-      }
-
-      // Atualizar total
-      document.getElementById('pesoTotal').innerText = pesoTotal.toFixed(1).replace('.', ',');
-
-      // Alerta 650 kg
-      const alerta = document.getElementById('pesoAlerta');
-      const corridaEl = document.getElementById('corridaTotal');
-      if (pesoTotal > LIMITE_FORNO) {
-        alerta.style.display = 'block';
-        corridaEl.style.background = '#5b1d1d';
-        document.getElementById('pesoTotal').style.color = '#ef4444';
-      } else {
-        alerta.style.display = 'none';
-        corridaEl.style.background = '#1e3a5f';
-        document.getElementById('pesoTotal').style.color = '#fff';
-      }
-
-      // Liga
-      document.getElementById('ligaCorrida').innerText = liga || '—';
-
-      // Itens da corrida
-      const container = document.getElementById('corridaItens');
-      if (itens.length === 0) {
-        container.innerHTML = '<div class="sem-moldes">Nenhum molde adicionado</div>';
-      } else {
-        container.innerHTML = itens.map(it => `
+  // Itens da corrida
+  const container = document.getElementById('corridaItens');
+  if(itens.length === 0){
+    container.innerHTML = '<div class="sem-moldes">Nenhum molde adicionado</div>';
+  } else {
+    container.innerHTML = itens.map(it => `
       <div class="corrida-item">
-        <div class="op-num">OP ${it.op} — ${it.qtd} molde${it.qtd !== 1 ? 's' : ''}</div>
-        <div class="op-desc">${(it.descricao || '').substring(0, 40)}</div>
+        <div class="op-num">OP ${it.op} — ${it.qtd} molde${it.qtd!==1?'s':''}</div>
+        <div class="op-desc">${(it.descricao||'').substring(0,40)}</div>
         <div class="op-peso">${it.peso.toFixed(1)} kg</div>
       </div>`).join('');
-      }
+  }
 
-      // Botões
-      const temItens = itens.length > 0;
-      document.getElementById('btnFecharCorrida').disabled = !temItens;
-      document.getElementById('btnImprimirFusao').disabled = !temItens;
-    }
+  // Botões
+  const temItens = itens.length > 0;
+  document.getElementById('btnFecharCorrida').disabled = !temItens;
+  document.getElementById('btnImprimirFusao').disabled = !temItens;
+}
 
-    async function fecharCorrida() {
-      const itens = Object.entries(corridaMoldes);
-      if (itens.length === 0) return;
+async function fecharCorrida(){
+  const itens = Object.entries(corridaMoldes);
+  if(itens.length === 0) return;
 
-      const idCorrida = gerarIdCorrida();
+  const idCorrida = gerarIdCorrida();
 
-      const btn = document.getElementById('btnFecharCorrida');
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spin-icon">🔄</span>';
+  const btn = document.getElementById('btnFecharCorrida');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin-icon">🔄</span>';
 
-      const ligaSnapshot = document.getElementById('fLiga').value;
-      const snapshotItens = [];
-      const agora = new Date().toLocaleString('pt-BR');
+  const ligaSnapshot = document.getElementById('fLiga').value;
+  const snapshotItens = [];
+  const agora = new Date().toLocaleString('pt-BR');
 
-      const itensLote = [];
+  const itensLote = [];
 
-      for (const [op, qtdUsada] of itens) {
-        const x = base.find(b => String(b.op) === String(op));
-        if (!x) continue;
-        const qtdDisp = Number(x.qtdmoldes || 0);
-        const pesoDisp = Number(x.pesomoldes || 0);
-        const pesoPorMolde = qtdDisp > 0 ? pesoDisp / qtdDisp : 0;
-        const novaQtd = qtdDisp - qtdUsada;
-        const novoPeso = novaQtd * pesoPorMolde;
-        const pesoUsado = qtdUsada * pesoPorMolde;
+  for(const [op, qtdUsada] of itens){
+    const x = base.find(b => String(b.op) === String(op));
+    if(!x) continue;
+    const qtdDisp    = Number(x.qtdmoldes||0);
+    const pesoDisp   = Number(x.pesomoldes||0);
+    const pesoPorMolde = qtdDisp > 0 ? pesoDisp / qtdDisp : 0;
+    const novaQtd    = qtdDisp - qtdUsada;
+    const novoPeso   = novaQtd * pesoPorMolde;
+    const pesoUsado  = qtdUsada * pesoPorMolde;
 
-        snapshotItens.push({
-          op, qtdUsada, cliente: x.cliente, codigo: x.codigo,
-          descricao: x.descricao, pedido: x.pedido,
-          liga: x.liga, prazo: x.prazo, pesoUsado,
-          saldoMoldesAntes: qtdDisp, saldoPesoAntes: pesoDisp,
-          saldoMoldesDepois: Math.max(0, novaQtd),
-          saldoPesoDepois: Math.max(0, parseFloat(novoPeso.toFixed(2)))
-        });
+    snapshotItens.push({
+      op, qtdUsada, cliente: x.cliente, codigo: x.codigo,
+      descricao: x.descricao, pedido: x.pedido,
+      liga: x.liga, prazo: x.prazo, pesoUsado,
+      saldoMoldesAntes: qtdDisp, saldoPesoAntes: pesoDisp,
+      saldoMoldesDepois: Math.max(0, novaQtd),
+      saldoPesoDepois: Math.max(0, parseFloat(novoPeso.toFixed(2)))
+    });
 
-        // Monta o item pro lote — nenhuma chamada de rede aqui dentro do loop,
-        // é só matemática local. Tudo vai numa única requisição depois.
-        itensLote.push({
-          idCorrida, dataHora: agora, liga: ligaSnapshot,
-          op: String(op), pedido: x.pedido || '', cliente: x.cliente || '',
-          codigo: x.codigo || '', descricao: x.descricao || '', prazo: x.prazo || '',
-          moldesUsados: qtdUsada, pesoUsado: parseFloat(pesoUsado.toFixed(2)),
-          saldoMoldesAntes: qtdDisp, saldoPesoAntes: pesoDisp,
-          saldoMoldesDepois: Math.max(0, novaQtd),
-          saldoPesoDepois: Math.max(0, parseFloat(novoPeso.toFixed(2)))
-        });
+    // Monta o item pro lote — nenhuma chamada de rede aqui dentro do loop,
+    // é só matemática local. Tudo vai numa única requisição depois.
+    itensLote.push({
+      idCorrida, dataHora: agora, liga: ligaSnapshot,
+      op: String(op), pedido: x.pedido||'', cliente: x.cliente||'',
+      codigo: x.codigo||'', descricao: x.descricao||'', prazo: x.prazo||'',
+      moldesUsados: qtdUsada, pesoUsado: parseFloat(pesoUsado.toFixed(2)),
+      saldoMoldesAntes: qtdDisp, saldoPesoAntes: pesoDisp,
+      saldoMoldesDepois: Math.max(0, novaQtd),
+      saldoPesoDepois: Math.max(0, parseFloat(novoPeso.toFixed(2)))
+    });
 
-        // Atualiza o histórico LOCAL na hora, sem esperar a planilha —
-        // garante que gerarIdCorrida() já enxerga esta corrida no cálculo
-        // do próximo ID, mesmo que a próxima corrida seja fechada em
-        // seguida muito rápido (antes da rede/planilha responder).
-        historicoData.push({
-          idCorrida, dataHora: agora, liga: ligaSnapshot,
-          op: String(op), pedido: x.pedido || '', cliente: x.cliente || '',
-          codigo: x.codigo || '', descricao: x.descricao || '', prazo: x.prazo || '',
-          moldesUsados: qtdUsada, pesoUsado: parseFloat(pesoUsado.toFixed(2)),
-          saldoMoldesAntes: qtdDisp, saldoPesoAntes: pesoDisp,
-          saldoMoldesDepois: Math.max(0, novaQtd),
-          saldoPesoDepois: Math.max(0, parseFloat(novoPeso.toFixed(2))),
-          moldesEstornados: 0, pesoEstornado: 0
-        });
-      }
+    // Atualiza o histórico LOCAL na hora, sem esperar a planilha —
+    // garante que gerarIdCorrida() já enxerga esta corrida no cálculo
+    // do próximo ID, mesmo que a próxima corrida seja fechada em
+    // seguida muito rápido (antes da rede/planilha responder).
+    historicoData.push({
+      idCorrida, dataHora: agora, liga: ligaSnapshot,
+      op: String(op), pedido: x.pedido||'', cliente: x.cliente||'',
+      codigo: x.codigo||'', descricao: x.descricao||'', prazo: x.prazo||'',
+      moldesUsados: qtdUsada, pesoUsado: parseFloat(pesoUsado.toFixed(2)),
+      saldoMoldesAntes: qtdDisp, saldoPesoAntes: pesoDisp,
+      saldoMoldesDepois: Math.max(0, novaQtd),
+      saldoPesoDepois: Math.max(0, parseFloat(novoPeso.toFixed(2))),
+      moldesEstornados: 0, pesoEstornado: 0
+    });
+  }
 
-      try {
-        // Uma única chamada — grava o histórico inteiro e atualiza todos os
-        // saldos na mesma execução do backend, em vez de duas chamadas de
-        // rede por OP (era isso que deixava lento com várias OPs na corrida).
-        await fetch(WEBAPP, {
-          method: 'POST',
-          body: JSON.stringify({tipo: 'fecharCorridaLote', itens: itensLote})
-        });
-      } catch (err) {
-        console.error('Erro ao salvar corrida', err);
-        alert('⚠ Erro ao salvar a corrida. Verifique sua conexão e tente novamente.');
-        btn.innerText = '💾';
-        btn.disabled = false;
-        return;
-      }
+  try{
+    // Uma única chamada — grava o histórico inteiro e atualiza todos os
+    // saldos na mesma execução do backend, em vez de duas chamadas de
+    // rede por OP (era isso que deixava lento com várias OPs na corrida).
+    await fetch(WEBAPP, {
+      method:'POST',
+      body: JSON.stringify({ tipo:'fecharCorridaLote', itens: itensLote })
+    });
+  } catch(err){
+    console.error('Erro ao salvar corrida', err);
+    alert('⚠ Erro ao salvar a corrida. Verifique sua conexão e tente novamente.');
+    btn.innerText = '💾';
+    btn.disabled = false;
+    return;
+  }
 
-      window._ultimaCorrida = {liga: ligaSnapshot, itens: snapshotItens, idCorrida};
+  window._ultimaCorrida = { liga: ligaSnapshot, itens: snapshotItens, idCorrida };
 
-      corridaMoldes = {};
-      btn.innerText = '✅';
-      setTimeout(() => {btn.innerText = '💾'; btn.disabled = true;}, 2000);
-      document.getElementById('btnImprimirFusao').disabled = false;
-      await carregar();
-      renderFusao();
-      atualizarIdPreview();
-    }
+  corridaMoldes = {};
+  btn.innerText = '✅';
+  setTimeout(() => { btn.innerText = '💾'; btn.disabled = true; }, 2000);
+  document.getElementById('btnImprimirFusao').disabled = false;
+  await carregar();
+  renderFusao();
+  atualizarIdPreview();
+}
 
-    function imprimirRomaneio() {
-      // ✅ Usar snapshot se corrida já foi fechada
-      const usarSnapshot = Object.keys(corridaMoldes).length === 0 && window._ultimaCorrida;
-      const liga = usarSnapshot ? window._ultimaCorrida.liga : document.getElementById('fLiga').value;
+function imprimirRomaneio(){
+  // ✅ Usar snapshot se corrida já foi fechada
+  const usarSnapshot = Object.keys(corridaMoldes).length === 0 && window._ultimaCorrida;
+  const liga = usarSnapshot ? window._ultimaCorrida.liga : document.getElementById('fLiga').value;
 
-      let pesoTotal = 0;
-      let seq = 1;
-      let linhas = '';
+  let pesoTotal = 0;
+  let seq = 1;
+  let linhas = '';
 
-      if (usarSnapshot) {
-        window._ultimaCorrida.itens.forEach(it => {
-          pesoTotal += it.pesoUsado;
-          linhas += `<tr>
-        <td>${seq++}</td><td>${it.op}</td><td>${it.pedido || '-'}</td>
-        <td>${it.codigo || '-'}</td><td>${it.descricao || '-'}</td>
-        <td>${it.cliente || '-'}</td><td>${it.liga || '-'}</td><td>${it.prazo || '-'}</td>
+  if(usarSnapshot){
+    window._ultimaCorrida.itens.forEach(it => {
+      pesoTotal += it.pesoUsado;
+      linhas += `<tr>
+        <td>${seq++}</td><td>${it.op}</td><td>${it.pedido||'-'}</td>
+        <td>${it.codigo||'-'}</td><td>${it.descricao||'-'}</td>
+        <td>${it.cliente||'-'}</td><td>${it.liga||'-'}</td><td>${it.prazo||'-'}</td>
         <td style="text-align:center">${it.qtdUsada}</td>
         <td style="text-align:right;font-weight:700">${it.pesoUsado.toFixed(1)}</td>
       </tr>`;
-        });
-      } else {
-        const itens = Object.entries(corridaMoldes);
-        if (itens.length === 0) return;
-        itens.forEach(([op, qtdUsada]) => {
-          const x = base.find(b => String(b.op) === String(op));
-          if (!x) return;
-          const qtdDisp = Number(x.qtdmoldes || x.qtd_moldes || 0);
-          const pesoDisp = Number(x.pesomoldes || x.peso_total_moldes || 0);
-          const pesoPorMolde = qtdDisp > 0 ? pesoDisp / qtdDisp : 0;
-          const peso = qtdUsada * pesoPorMolde;
-          pesoTotal += peso;
-          linhas += `<tr>
-        <td>${seq++}</td><td>${x.op}</td><td>${x.pedido || '-'}</td>
-        <td>${x.codigo || '-'}</td><td>${x.descricao || '-'}</td>
-        <td>${x.cliente || '-'}</td><td>${x.liga || '-'}</td><td>${x.prazo || '-'}</td>
+    });
+  } else {
+    const itens = Object.entries(corridaMoldes);
+    if(itens.length === 0) return;
+    itens.forEach(([op, qtdUsada]) => {
+      const x = base.find(b => String(b.op) === String(op));
+      if(!x) return;
+      const qtdDisp = Number(x.qtdmoldes||x.qtd_moldes||0);
+      const pesoDisp = Number(x.pesomoldes||x.peso_total_moldes||0);
+      const pesoPorMolde = qtdDisp > 0 ? pesoDisp / qtdDisp : 0;
+      const peso = qtdUsada * pesoPorMolde;
+      pesoTotal += peso;
+      linhas += `<tr>
+        <td>${seq++}</td><td>${x.op}</td><td>${x.pedido||'-'}</td>
+        <td>${x.codigo||'-'}</td><td>${x.descricao||'-'}</td>
+        <td>${x.cliente||'-'}</td><td>${x.liga||'-'}</td><td>${x.prazo||'-'}</td>
         <td style="text-align:center">${qtdUsada}</td>
         <td style="text-align:right;font-weight:700">${peso.toFixed(1)}</td>
       </tr>`;
-        });
-      }
+    });
+  }
 
-      const totalMoldes = usarSnapshot
-        ? window._ultimaCorrida.itens.reduce((a, b) => a + b.qtdUsada, 0)
-        : Object.values(corridaMoldes).reduce((a, b) => a + b, 0);
+  const totalMoldes = usarSnapshot
+    ? window._ultimaCorrida.itens.reduce((a,b)=>a+b.qtdUsada,0)
+    : Object.values(corridaMoldes).reduce((a,b)=>a+b,0);
 
-      const idCorrida = usarSnapshot ? window._ultimaCorrida.idCorrida : gerarIdCorrida();
-      const corId = '#000000';
+  const idCorrida = usarSnapshot ? window._ultimaCorrida.idCorrida : gerarIdCorrida();
+  const corId = '#000000';
 
-      const alertaTxt = pesoTotal > LIMITE_FORNO
-        ? `<p style="color:red;font-weight:bold">⚠ PESO ACIMA DO LIMITE DO FORNO (${LIMITE_FORNO} kg) — VERIFICAR RECARGA</p>`
-        : '';
+  const alertaTxt = pesoTotal > LIMITE_FORNO
+    ? `<p style="color:red;font-weight:bold">⚠ PESO ACIMA DO LIMITE DO FORNO (${LIMITE_FORNO} kg) — VERIFICAR RECARGA</p>`
+    : '';
 
-      const w = window.open('');
-      w.document.write(`
+  const w = window.open('');
+  w.document.write(`
   <html><head><title>ROMANEIO DE FUSÃO</title>
   <style>
     body{font-family:Arial;padding:24px;color:#111}
@@ -1697,7 +1151,7 @@
         <h2>PLANEJAMENTO DE FUSÃO — LIGA ${liga}</h2>
         <div class="sub">Emitido em: ${new Date().toLocaleString('pt-BR')}</div>
       </div>
-      <div class="id-corrida">${idCorrida || '—'}</div>
+      <div class="id-corrida">${idCorrida||'—'}</div>
     </div>
     ${alertaTxt}
     <table>
@@ -1726,135 +1180,135 @@
     </div>
     <script>window.onload=()=>window.print();<\/script>
   </body></html>`);
-      w.document.close();
+  w.document.close();
+}
+
+// ── AUTO RELOAD ──
+setInterval(()=>{
+  if(salvando || alteradas.size > 0) return;
+  carregar();
+}, 15000);
+
+// ══════════════════════════════════════
+// HISTÓRICO DE CORRIDAS
+// ══════════════════════════════════════
+let historicoData = [];
+let mesResumoOffset = 0; // 0 = mês atual, -1 = mês anterior, +1 = próximo mês
+
+function navegarMesResumo(delta){
+  mesResumoOffset += delta;
+  renderHistorico();
+}
+
+async function carregarHistorico(){
+  document.getElementById('historicoContainer').innerHTML =
+    '<div style="text-align:center;color:#9eb0c1;padding:40px">Carregando...</div>';
+  try {
+    const r = await fetch(WEBAPP+'?tipo=historicoFusao&t='+Date.now());
+    historicoData = await r.json();
+    // Popular ligas do histórico
+    const ligas = [...new Set(historicoData.map(x=>x.liga||'').filter(Boolean))].sort();
+    const sel = document.getElementById('fHistLiga');
+    const atual = sel.value;
+    sel.innerHTML = '<option value="">Todas as ligas</option>';
+    ligas.forEach(l => sel.innerHTML += `<option value="${l}">${l}</option>`);
+    if(atual) sel.value = atual;
+    renderHistorico();
+  } catch(e) {
+    document.getElementById('historicoContainer').innerHTML =
+      '<div style="text-align:center;color:#ef4444;padding:40px">Erro ao carregar histórico</div>';
+  }
+}
+
+function renderHistorico(){
+  const liga  = document.getElementById('fHistLiga').value;
+  const busca = document.getElementById('fHistBusca').value.toUpperCase();
+
+  let lista = historicoData.filter(x => {
+    let ok = true;
+    if(liga  && x.liga !== liga) ok = false;
+    if(busca){
+      const campos = (x.idCorrida||'')+(x.op||'')+(x.pedido||'')+(x.cliente||'')+(x.codigo||'')+(x.descricao||'');
+      if(!campos.toUpperCase().includes(busca)) ok = false;
     }
+    return ok;
+  });
 
-    // ── AUTO RELOAD ──
-    setInterval(() => {
-      if (salvando || alteradas.size > 0) return;
-      carregar();
-    }, 15000);
+  // Resumo do mês selecionado (navegável) — soma moldes/peso líquidos
+  // (já descontando estornos) de todas as corridas cujo dataHora cai
+  // naquele mês.
+  const baseData = new Date();
+  baseData.setMonth(baseData.getMonth() + mesResumoOffset);
+  const mesRef = String(baseData.getMonth()+1).padStart(2,'0')+'/'+baseData.getFullYear();
+  let moldesMes = 0, pesoMes = 0;
+  historicoData.forEach(x => {
+    const dh = String(x.dataHora||'');
+    const partes = dh.split('/');
+    if(partes.length < 3) return;
+    const mesAno = partes[1]+'/'+partes[2].split(/[\s,]+/)[0];
+    if(mesAno !== mesRef) return;
+    moldesMes += (Number(x.moldesUsados||0) - Number(x.moldesEstornados||0));
+    pesoMes   += (Number(x.pesoUsado||0) - Number(x.pesoEstornado||0));
+  });
+  const resumoEl = document.getElementById('resumoMesHistorico');
+  if(resumoEl){
+    resumoEl.innerHTML = `📅 <strong style="color:#f07a1f">${mesRef}</strong> — ` +
+      `<span style="color:#60a5fa;font-weight:700">${moldesMes} moldes</span> · ` +
+      `<span style="color:#34d399;font-weight:700">${pesoMes.toFixed(1)} kg</span>`;
+  }
 
-    // ══════════════════════════════════════
-    // HISTÓRICO DE CORRIDAS
-    // ══════════════════════════════════════
-    let historicoData = [];
-    let mesResumoOffset = 0; // 0 = mês atual, -1 = mês anterior, +1 = próximo mês
+  // Agrupar por ID_CORRIDA
+  const grupos = {};
+  lista.forEach(x => {
+    if(!grupos[x.idCorrida]) grupos[x.idCorrida] = [];
+    grupos[x.idCorrida].push(x);
+  });
 
-    function navegarMesResumo(delta) {
-      mesResumoOffset += delta;
-      renderHistorico();
-    }
+  if(Object.keys(grupos).length === 0){
+    document.getElementById('historicoContainer').innerHTML =
+      '<div style="text-align:center;color:#9eb0c1;padding:40px">Nenhuma corrida encontrada</div>';
+    return;
+  }
 
-    async function carregarHistorico() {
-      document.getElementById('historicoContainer').innerHTML =
-        '<div style="text-align:center;color:#9eb0c1;padding:40px">Carregando...</div>';
-      try {
-        const r = await fetch(WEBAPP + '?tipo=historicoFusao&t=' + Date.now());
-        historicoData = await r.json();
-        // Popular ligas do histórico
-        const ligas = [...new Set(historicoData.map(x => x.liga || '').filter(Boolean))].sort();
-        const sel = document.getElementById('fHistLiga');
-        const atual = sel.value;
-        sel.innerHTML = '<option value="">Todas as ligas</option>';
-        ligas.forEach(l => sel.innerHTML += `<option value="${l}">${l}</option>`);
-        if (atual) sel.value = atual;
-        renderHistorico();
-      } catch (e) {
-        document.getElementById('historicoContainer').innerHTML =
-          '<div style="text-align:center;color:#ef4444;padding:40px">Erro ao carregar histórico</div>';
-      }
-    }
+  document.getElementById('historicoContainer').innerHTML = Object.entries(grupos).reverse().map(([id, ops]) => {
+    // Filtrar OPs 100% estornadas
+    const opsAtivas = ops.filter(op => Number(op.moldesEstornados||0) < Number(op.moldesUsados||0));
 
-    function renderHistorico() {
-      const liga = document.getElementById('fHistLiga').value;
-      const busca = document.getElementById('fHistBusca').value.toUpperCase();
+    // Se todas as OPs foram 100% estornadas, ocultar o grupo inteiro
+    if(opsAtivas.length === 0) return '';
 
-      let lista = historicoData.filter(x => {
-        let ok = true;
-        if (liga && x.liga !== liga) ok = false;
-        if (busca) {
-          const campos = (x.idCorrida || '') + (x.op || '') + (x.pedido || '') + (x.cliente || '') + (x.codigo || '') + (x.descricao || '');
-          if (!campos.toUpperCase().includes(busca)) ok = false;
-        }
-        return ok;
-      });
+    const corId = '#e8f2fa'; // neutro — a cor por prioridade só se aplica na impressão
+    const totalMoldes = opsAtivas.reduce((s,x)=>s+(Number(x.moldesUsados)||0)-(Number(x.moldesEstornados)||0),0);
+    const totalPeso   = opsAtivas.reduce((s,x)=>s+(Number(x.pesoUsado)||0)-(Number(x.pesoEstornado)||0),0);
 
-      // Resumo do mês selecionado (navegável) — soma moldes/peso líquidos
-      // (já descontando estornos) de todas as corridas cujo dataHora cai
-      // naquele mês.
-      const baseData = new Date();
-      baseData.setMonth(baseData.getMonth() + mesResumoOffset);
-      const mesRef = String(baseData.getMonth() + 1).padStart(2, '0') + '/' + baseData.getFullYear();
-      let moldesMes = 0, pesoMes = 0;
-      historicoData.forEach(x => {
-        const dh = String(x.dataHora || '');
-        const partes = dh.split('/');
-        if (partes.length < 3) return;
-        const mesAno = partes[1] + '/' + partes[2].split(/[\s,]+/)[0];
-        if (mesAno !== mesRef) return;
-        moldesMes += (Number(x.moldesUsados || 0) - Number(x.moldesEstornados || 0));
-        pesoMes += (Number(x.pesoUsado || 0) - Number(x.pesoEstornado || 0));
-      });
-      const resumoEl = document.getElementById('resumoMesHistorico');
-      if (resumoEl) {
-        resumoEl.innerHTML = `📅 <strong style="color:#f07a1f">${mesRef}</strong> — ` +
-          `<span style="color:#60a5fa;font-weight:700">${moldesMes} moldes</span> · ` +
-          `<span style="color:#34d399;font-weight:700">${pesoMes.toFixed(1)} kg</span>`;
-      }
-
-      // Agrupar por ID_CORRIDA
-      const grupos = {};
-      lista.forEach(x => {
-        if (!grupos[x.idCorrida]) grupos[x.idCorrida] = [];
-        grupos[x.idCorrida].push(x);
-      });
-
-      if (Object.keys(grupos).length === 0) {
-        document.getElementById('historicoContainer').innerHTML =
-          '<div style="text-align:center;color:#9eb0c1;padding:40px">Nenhuma corrida encontrada</div>';
-        return;
-      }
-
-      document.getElementById('historicoContainer').innerHTML = Object.entries(grupos).reverse().map(([id, ops]) => {
-        // Filtrar OPs 100% estornadas
-        const opsAtivas = ops.filter(op => Number(op.moldesEstornados || 0) < Number(op.moldesUsados || 0));
-
-        // Se todas as OPs foram 100% estornadas, ocultar o grupo inteiro
-        if (opsAtivas.length === 0) return '';
-
-        const corId = '#e8f2fa'; // neutro — a cor por prioridade só se aplica na impressão
-        const totalMoldes = opsAtivas.reduce((s, x) => s + (Number(x.moldesUsados) || 0) - (Number(x.moldesEstornados) || 0), 0);
-        const totalPeso = opsAtivas.reduce((s, x) => s + (Number(x.pesoUsado) || 0) - (Number(x.pesoEstornado) || 0), 0);
-
-        const linhasOps = opsAtivas.map(op => {
-          const jaEstornado = Number(op.moldesEstornados || 0);
-          const dispEstorno = Number(op.moldesUsados || 0) - jaEstornado;
-          return `<tr>
+    const linhasOps = opsAtivas.map(op => {
+      const jaEstornado = Number(op.moldesEstornados||0);
+      const dispEstorno = Number(op.moldesUsados||0) - jaEstornado;
+      return `<tr>
         <td style="color:#f07a1f;font-weight:800">${op.op}</td>
-        <td>${op.cliente || '-'}</td>
-        <td>${op.codigo || '-'}</td>
-        <td>${(op.descricao || '-').substring(0, 30)}</td>
-        <td style="text-align:center">${Number(op.moldesUsados || 0) - Number(op.moldesEstornados || 0)}</td>
-        <td style="text-align:right">${(Number(op.pesoUsado || 0) - Number(op.pesoEstornado || 0)).toFixed(1)} kg</td>
+        <td>${op.cliente||'-'}</td>
+        <td>${op.codigo||'-'}</td>
+        <td>${(op.descricao||'-').substring(0,30)}</td>
+        <td style="text-align:center">${Number(op.moldesUsados||0) - Number(op.moldesEstornados||0)}</td>
+        <td style="text-align:right">${(Number(op.pesoUsado||0) - Number(op.pesoEstornado||0)).toFixed(1)} kg</td>
         <td style="text-align:center">
           ${dispEstorno > 0
-              ? `<button onclick="estornarMoldeIndividual('${id}','${op.op}',${dispEstorno})"
+            ? `<button onclick="estornarMoldeIndividual('${id}','${op.op}',${dispEstorno})"
                  title="Estornar"
                  style="background:#7c2d12;color:#fed7aa;border:none;border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer">
                  ↩
                </button>`
-              : '<span style="color:#4a6a82;font-size:11px">Cancelado</span>'}
+            : '<span style="color:#4a6a82;font-size:11px">Cancelado</span>'}
         </td>
       </tr>`;
-        }).join('');
+    }).join('');
 
-        return `<div style="background:#1e2d3d;border-radius:12px;margin-bottom:12px;overflow:hidden">
+    return `<div style="background:#1e2d3d;border-radius:12px;margin-bottom:12px;overflow:hidden">
       <div style="background:#172230;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
         <div>
           <span style="font-size:16px;font-weight:900;color:${corId}">${id}</span>
-          <span style="color:#9eb0c1;font-size:11px;margin-left:12px">LIGA: ${ops[0]?.liga || '—'}</span>
-          <span style="color:#9eb0c1;font-size:11px;margin-left:12px">${ops[0]?.dataHora || '—'}</span>
+          <span style="color:#9eb0c1;font-size:11px;margin-left:12px">LIGA: ${ops[0]?.liga||'—'}</span>
+          <span style="color:#9eb0c1;font-size:11px;margin-left:12px">${ops[0]?.dataHora||'—'}</span>
         </div>
         <div style="text-align:right">
           <span style="color:#60a5fa;font-weight:700">${totalMoldes} moldes</span>
@@ -1886,135 +1340,135 @@
         </table>
       </div>
     </div>`;
-      }).join('');
+  }).join('');
+}
+
+async function estornarMoldeIndividual(idCorrida, op, qtdDisponivel){
+  const valor = prompt(`Quantos moldes estornar da OP ${op}?\n(Disponível para estorno: ${qtdDisponivel})`, qtdDisponivel);
+  if(valor === null) return; // cancelado pelo usuário
+
+  const qtd = parseInt(valor);
+  if(!qtd || qtd <= 0){ alert('Quantidade inválida.'); return; }
+  if(qtd > qtdDisponivel){ alert(`Quantidade maior que o disponível (${qtdDisponivel}).`); return; }
+
+  try{
+    const r = await fetch(WEBAPP, {
+      method:'POST',
+      body: JSON.stringify({ tipo:'estornarFusao', idCorrida, op, qtdEstorno: qtd })
+    });
+    const txt = await r.text();
+    if(txt === 'OK'){
+      alert(`✅ ${qtd} molde(s) estornado(s) da OP ${op}.`);
+    } else {
+      alert(`⚠ Erro ao estornar: ${txt}`);
+      return;
     }
+  }catch(e){
+    alert('⚠ Erro de conexão ao estornar.');
+    return;
+  }
 
-    async function estornarMoldeIndividual(idCorrida, op, qtdDisponivel) {
-      const valor = prompt(`Quantos moldes estornar da OP ${op}?\n(Disponível para estorno: ${qtdDisponivel})`, qtdDisponivel);
-      if (valor === null) return; // cancelado pelo usuário
+  await carregar();
+  carregarHistorico();
+}
 
-      const qtd = parseInt(valor);
-      if (!qtd || qtd <= 0) {alert('Quantidade inválida.'); return;}
-      if (qtd > qtdDisponivel) {alert(`Quantidade maior que o disponível (${qtdDisponivel}).`); return;}
+async function cancelarCorridaInteira(idCorrida){
+  if(!confirm(`Cancelar TODA a corrida ${idCorrida}?\n\nIsso devolve 100% dos moldes para a carteira e APAGA esta corrida do histórico permanentemente — não pode ser desfeito.`)) return;
 
-      try {
-        const r = await fetch(WEBAPP, {
-          method: 'POST',
-          body: JSON.stringify({tipo: 'estornarFusao', idCorrida, op, qtdEstorno: qtd})
-        });
-        const txt = await r.text();
-        if (txt === 'OK') {
-          alert(`✅ ${qtd} molde(s) estornado(s) da OP ${op}.`);
-        } else {
-          alert(`⚠ Erro ao estornar: ${txt}`);
-          return;
-        }
-      } catch (e) {
-        alert('⚠ Erro de conexão ao estornar.');
-        return;
-      }
+  const opsCorrida = historicoData.filter(x =>
+    x.idCorrida === idCorrida &&
+    Number(x.moldesEstornados||0) < Number(x.moldesUsados||0)
+  );
 
-      await carregar();
-      carregarHistorico();
-    }
+  if(opsCorrida.length === 0){ alert('Esta corrida já está totalmente cancelada.'); return; }
 
-    async function cancelarCorridaInteira(idCorrida) {
-      if (!confirm(`Cancelar TODA a corrida ${idCorrida}?\n\nIsso devolve 100% dos moldes para a carteira e APAGA esta corrida do histórico permanentemente — não pode ser desfeito.`)) return;
+  let erros = 0;
+  for(const item of opsCorrida){
+    const qtdRestante = Number(item.moldesUsados||0) - Number(item.moldesEstornados||0);
+    if(qtdRestante <= 0) continue;
+    try{
+      const r = await fetch(WEBAPP, {
+        method:'POST',
+        body: JSON.stringify({ tipo:'estornarFusao', idCorrida, op: item.op, qtdEstorno: qtdRestante })
+      });
+      const txt = await r.text();
+      if(txt !== 'OK') erros++;
+    }catch(e){ erros++; }
+  }
 
-      const opsCorrida = historicoData.filter(x =>
-        x.idCorrida === idCorrida &&
-        Number(x.moldesEstornados || 0) < Number(x.moldesUsados || 0)
-      );
-
-      if (opsCorrida.length === 0) {alert('Esta corrida já está totalmente cancelada.'); return;}
-
-      let erros = 0;
-      for (const item of opsCorrida) {
-        const qtdRestante = Number(item.moldesUsados || 0) - Number(item.moldesEstornados || 0);
-        if (qtdRestante <= 0) continue;
-        try {
-          const r = await fetch(WEBAPP, {
-            method: 'POST',
-            body: JSON.stringify({tipo: 'estornarFusao', idCorrida, op: item.op, qtdEstorno: qtdRestante})
-          });
-          const txt = await r.text();
-          if (txt !== 'OK') erros++;
-        } catch (e) {erros++;}
-      }
-
-      if (erros === 0) {
-        // Todos os estornos confirmados — agora apaga de vez as linhas
-        // dessa corrida no HISTORICO_FUSAO, sem deixar vestígio.
-        try {
-          const r = await fetch(WEBAPP, {
-            method: 'POST',
-            body: JSON.stringify({tipo: 'excluirHistoricoFusao', idCorrida})
-          });
-          const txt = await r.text();
-          if (txt === 'OK') {
-            historicoData = historicoData.filter(x => x.idCorrida !== idCorrida);
-            alert('✅ Corrida cancelada e removida do histórico com sucesso!');
-          } else {
-            alert('⚠ Saldo devolvido, mas houve erro ao limpar o histórico. Verifique manualmente.');
-          }
-        } catch (e) {
-          alert('⚠ Saldo devolvido, mas houve erro ao limpar o histórico. Verifique manualmente.');
-        }
+  if(erros === 0){
+    // Todos os estornos confirmados — agora apaga de vez as linhas
+    // dessa corrida no HISTORICO_FUSAO, sem deixar vestígio.
+    try{
+      const r = await fetch(WEBAPP, {
+        method:'POST',
+        body: JSON.stringify({ tipo:'excluirHistoricoFusao', idCorrida })
+      });
+      const txt = await r.text();
+      if(txt === 'OK'){
+        historicoData = historicoData.filter(x => x.idCorrida !== idCorrida);
+        alert('✅ Corrida cancelada e removida do histórico com sucesso!');
       } else {
-        alert(`⚠ Cancelada com ${erros} erro(s). Verifique o histórico.`);
+        alert('⚠ Saldo devolvido, mas houve erro ao limpar o histórico. Verifique manualmente.');
       }
-
-      await carregar();
-      carregarHistorico();
+    }catch(e){
+      alert('⚠ Saldo devolvido, mas houve erro ao limpar o histórico. Verifique manualmente.');
     }
+  } else {
+    alert(`⚠ Cancelada com ${erros} erro(s). Verifique o histórico.`);
+  }
 
-    // Formata prazo com segurança — trata tanto texto já formatado (DD/MM/YYYY)
-    // quanto objeto Date puro (que viraria um texto tipo "Thu Aug 27 2026...").
-    function formatarPrazoSeguro(v) {
-      if (!v) return '';
-      if (v instanceof Date) {
-        const dd = String(v.getDate()).padStart(2, '0');
-        const mm = String(v.getMonth() + 1).padStart(2, '0');
-        const yyyy = v.getFullYear();
-        return `${dd}/${mm}/${yyyy}`;
-      }
-      return String(v);
-    }
+  await carregar();
+  carregarHistorico();
+}
 
-    async function reimprimirCorrida(idCorrida) {
-      // Filtrar OPs 100% estornadas
-      const ops = historicoData
-        .filter(x => x.idCorrida === idCorrida)
-        .filter(x => Number(x.moldesEstornados || 0) < Number(x.moldesUsados || 0));
+// Formata prazo com segurança — trata tanto texto já formatado (DD/MM/YYYY)
+// quanto objeto Date puro (que viraria um texto tipo "Thu Aug 27 2026...").
+function formatarPrazoSeguro(v){
+  if(!v) return '';
+  if(v instanceof Date){
+    const dd = String(v.getDate()).padStart(2,'0');
+    const mm = String(v.getMonth()+1).padStart(2,'0');
+    const yyyy = v.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  }
+  return String(v);
+}
 
-      if (!ops.length) {alert('Todas as OPs desta corrida foram 100% estornadas.'); return;}
-      const liga = ops[0].liga || '—';
-      const corId = '#000000';
-      let linhas = ''; let pesoTotal = 0; let totalMoldes = 0; let seq = 1;
-      ops.forEach(op => {
-        const moldesLiquidos = Number(op.moldesUsados || 0) - Number(op.moldesEstornados || 0);
-        const pesoEstornado = Number(op.pesoEstornado || 0);
-        const pesoLiquido = Number(op.pesoUsado || 0) - pesoEstornado;
-        pesoTotal += pesoLiquido;
-        totalMoldes += moldesLiquidos;
-        // Prazo: usa o salvo no histórico; se não tiver (corridas antigas, antes
-        // da correção), busca o prazo atual da base viva — mesma fonte que a
-        // impressão do Planejamento de Fusão usa.
-        const opBase = base.find(b => String(b.op) === String(op.op));
-        const prazoExibir = formatarPrazoSeguro(op.prazo) || formatarPrazoSeguro(opBase ? opBase.prazo : '') || '-';
-        linhas += `<tr><td>${seq++}</td><td>${op.op}</td><td>${op.pedido || '-'}</td>
-      <td>${op.codigo || '-'}</td><td>${op.descricao || '-'}</td><td>${op.cliente || '-'}</td>
-      <td>${op.liga || '-'}</td><td>${prazoExibir}</td>
+async function reimprimirCorrida(idCorrida){
+  // Filtrar OPs 100% estornadas
+  const ops = historicoData
+    .filter(x => x.idCorrida === idCorrida)
+    .filter(x => Number(x.moldesEstornados||0) < Number(x.moldesUsados||0));
+
+  if(!ops.length){ alert('Todas as OPs desta corrida foram 100% estornadas.'); return; }
+  const liga = ops[0].liga || '—';
+  const corId = '#000000';
+  let linhas = ''; let pesoTotal = 0; let totalMoldes = 0; let seq = 1;
+  ops.forEach(op => {
+    const moldesLiquidos = Number(op.moldesUsados||0) - Number(op.moldesEstornados||0);
+    const pesoEstornado  = Number(op.pesoEstornado||0);
+    const pesoLiquido    = Number(op.pesoUsado||0) - pesoEstornado;
+    pesoTotal += pesoLiquido;
+    totalMoldes += moldesLiquidos;
+    // Prazo: usa o salvo no histórico; se não tiver (corridas antigas, antes
+    // da correção), busca o prazo atual da base viva — mesma fonte que a
+    // impressão do Planejamento de Fusão usa.
+    const opBase = base.find(b => String(b.op) === String(op.op));
+    const prazoExibir = formatarPrazoSeguro(op.prazo) || formatarPrazoSeguro(opBase ? opBase.prazo : '') || '-';
+    linhas += `<tr><td>${seq++}</td><td>${op.op}</td><td>${op.pedido||'-'}</td>
+      <td>${op.codigo||'-'}</td><td>${op.descricao||'-'}</td><td>${op.cliente||'-'}</td>
+      <td>${op.liga||'-'}</td><td>${prazoExibir}</td>
       <td style="text-align:center">${moldesLiquidos}</td>
       <td style="text-align:right;font-weight:700">${pesoLiquido.toFixed(1)}</td></tr>`;
-      });
+  });
 
-      const alertaTxt = pesoTotal > LIMITE_FORNO
-        ? `<p style="color:red;font-weight:bold">⚠ PESO ACIMA DO LIMITE DO FORNO (${LIMITE_FORNO} kg) — VERIFICAR RECARGA</p>`
-        : '';
+  const alertaTxt = pesoTotal > LIMITE_FORNO
+    ? `<p style="color:red;font-weight:bold">⚠ PESO ACIMA DO LIMITE DO FORNO (${LIMITE_FORNO} kg) — VERIFICAR RECARGA</p>`
+    : '';
 
-      const w = window.open('');
-      w.document.write(`<html><head><title>ROMANEIO ${idCorrida}</title>
+  const w = window.open('');
+  w.document.write(`<html><head><title>ROMANEIO ${idCorrida}</title>
   <style>body{font-family:Arial;padding:24px;color:#111}
   .hdr{display:flex;justify-content:space-between;align-items:flex-start}
   h2{font-size:18px;margin:0}.id{font-size:20px;font-weight:900;color:${corId}}
@@ -2027,7 +1481,7 @@
   .rodape-linha{border-bottom:1px solid #333;height:24px;margin-top:4px}
   </style></head><body>
   <div class="hdr"><div><h2>PLANEJAMENTO DE FUSÃO — LIGA ${liga}</h2>
-  <div class="sub">Reimpresso em: ${new Date().toLocaleString('pt-BR')} | Original: ${ops[0].dataHora || '—'}</div>
+  <div class="sub">Reimpresso em: ${new Date().toLocaleString('pt-BR')} | Original: ${ops[0].dataHora||'—'}</div>
   </div><div class="id">${idCorrida}</div></div>
   ${alertaTxt}
   <table><thead><tr><th>#</th><th>OP</th><th>PEDIDO</th><th>CÓDIGO</th><th>DESCRIÇÃO</th>
@@ -2042,14 +1496,13 @@
     <div class="rodape-campo"><div class="rodape-label">OP da Liga:</div><div class="rodape-linha"></div></div>
   </div>
   <script>window.onload=()=>window.print();<\/script></body></html>`);
-      w.document.close();
-    }
+  w.document.close();
+}
 
-    // ── INIT ──
-    document.addEventListener('DOMContentLoaded', () => {
-      carregar();
-    });
-  </script>
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  carregar();
+});
+</script>
 </body>
-
 </html>
